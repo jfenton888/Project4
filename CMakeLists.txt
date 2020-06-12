@@ -17,7 +17,7 @@ endif()
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(Project4 main.cpp)
+add_executable(Project4 main.cpp heapV.cpp heapV.h initializeGraph.cpp initializeGraph.h maze.cpp maze.h)
 
 
 if(Boost_FOUND)

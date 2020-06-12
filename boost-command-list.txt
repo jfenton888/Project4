@@ -1,0 +1,68 @@
+// Create an empty graph
+Graph g;      
+
+// Create a graph with 5 nodes and no edges
+Graph g(5)    
+
+// Returns the number of edges
+int num_edges(g)
+
+// Returns the number of vertices
+int num_vertices(g)
+
+// Create a new node in the graph and return its vertex descriptor
+Graph::vertex_descriptor add_vertex(Graph &g); 
+
+// Access a property of a node
+g[v].visited = true; 
+
+// Get a pair containing iterators pointing the beginning and end of the
+// list of nodes
+pair<Graph::vertex_iterator, Graph::vertex_iterator> vItrRange = vertices(Graph &g);
+
+// Loop over all nodes in the graph
+for (Graph::vertex_iterator vItr= vItrRange.first; vItr != vItrRange.second; ++vItr)
+
+// Access a node using a vertex iterator
+g[*vItr]
+
+// Get a pair containing iterators pointing to the beginning and end of the
+// list of nodes adjacent to node v
+pair<Graph::adjacency_iterator, Graph::adjacency_iterator> 
+vItrRange = adjacent_vertices(Graph::vertex_descriptor v, Graph &g);
+
+// Loop over adjacent nodes in the graph
+for (Graph::adjacency_iterator vItr= vItrRange.first; vItr != vItrRange.second; ++vItr)
+
+// Get a pair containing iterators pointing the beginning and end of the
+// list of edges
+pair<Graph::edge_iterator, Graph::edge_iterator> eItrRange = edges(Graph &g);
+
+// Loop over all edges in the graph
+for (Graph::edge_iterator eItr= eItrRange.first; eItr != eItrRange.second; ++eItr)
+      
+// Add an edge (u,v) to the graph.  newEdge.first is the edge descriptor for the
+// new edge.  newEdge.second is true if the edge didn't already exist, and false
+// otherwise
+pair<Graph::edge_descriptor, bool> newEdge = 
+add_edge(Graph::vertex_descriptor u, Graph:: vertex_descriptor v, Graph &g);
+
+Graph::edge_descriptor e;
+
+// Access a property of an edge
+g[e].visited = true;
+g[*eItr].visited = true;
+
+// If edge (u,v) exists, checkEdge.first is that edge and checkEdge.second is true.
+// Otherwise checkEdge.second is false.
+pair<Graph::edge_descriptor, bool> checkEdge = 
+edge(Graph::vertex_descriptor u, Graph::vertex_descriptor v, Graph &g);
+
+// Returns the target vertex of edge e.
+vertex_descriptor target(Graph::edge_descriptor e, Graph &g)
+
+// Returns the source vertex of edge e.
+vertex_descriptor source(Graph::edge_descriptor e, Graph &g)
+
+// Remove the edge (u,v) from the graph.
+void remove_edge(Graph::vertex_descriptor u, Graph::vertex_descriptor v, Graph &g)

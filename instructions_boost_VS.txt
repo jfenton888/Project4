@@ -1,0 +1,61 @@
+Instructions for installing Boost Library within Visual C++/Studio
+
+Step 1.
+Download boost_1_57_0.zip to your local directory in hard drive:
+http://sourceforge.net/projects/boost/files/boost/1.57.0/boost_1_57_0.zip/download
+
+Step 2.
+Exctract boost_1_57_0.zip.
+A folder named boost_1_57_0 is created in this directory and its absolute path is, for example, C:\boost_1_57_0\
+The structure of boost_1_57_0 folder is shown as following:
+
+boost_1_57_0\ .................The ¡°boost root directory¡±
+   index.htm .........A copy of www.boost.org starts here
+   boost\ .........................All Boost Header files
+   lib\ .....................precompiled library binaries
+   libs\ ............Tests, .cpps, docs, etc., by library
+     index.html ........Library documentation starts here
+     algorithm\
+     any\
+     array\
+                     ¡­more libraries¡­
+   status\ .........................Boost-wide test suite
+   tools\ ...........Utilities, e.g. Boost.Build, quickbook, bcp
+   more\ ..........................Policy documents, etc.
+   doc\ ...............A subset of all Boost library docs
+
+Step 3.
+Open Visual C++ and create a new project
+
+Step 4.
+Right-click the project in the Solution Explorer pane and select Properties from the resulting pop-up menu.
+In Configuration Properties > C/C++ > General > Additional Include Directories, enter the path to the Boost root directory, for example
+C:\boost_1_57_0\
+In Configuration Properties > C/C++ > Precompiled Headers, change Use Precompiled Header (/Yu) to Not Using Precompiled Headers.
+
+Step 5.
+Configuration completes. You could run a simple test as shown below:
+
+Note: the following program reads a sequence of integers from standard input, uses Boost.Lambda to multiply each number by three, and writes them to standard output:
+
+#include <boost/lambda/lambda.hpp>
+#include <iostream>
+#include <iterator>
+#include <algorithm>
+
+int main()
+{
+    using namespace boost::lambda;
+    typedef std::istream_iterator<int> in;
+
+    std::for_each(
+        in(std::cin), in(), std::cout << (_1 * 3) << " " );
+}
+
+Copy the text of this program above into main.cpp in your project, then build and run.
+
+Step 6.
+Boost Graph Library (BGL)
+The header files are in C:\boost_1_57_0\boost\graph\
+More info can be found in the boost doumationtion:
+C:\boost_1_57_0\index.html

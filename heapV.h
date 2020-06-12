@@ -17,8 +17,11 @@
 //#define LargeValue 999999999
 //#define SmallValue -999999999
 
+#include <iostream>
 #include "d_except.h"
 #include <vector>
+
+using namespace std;
 
 template <typename T, typename U>
 class heapV

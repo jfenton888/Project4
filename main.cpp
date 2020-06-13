@@ -1,92 +1,76 @@
-//
-//  main.cpp
-//  finalP
-//
-//  Created by Tamara Kahhale on 6/12/20.
-//  Copyright © 2020 Tamara Kahhale. All rights reserved.
-//
-
-
 #include <iostream>
-#include <iterator>
-#include <algorithm>
-#include "maze.hpp"
+#include <limits.h>
+#include <vector>
+#include <list>
+#include <fstream>
+#include <queue>
 
-/* Pretty sure this function is necessary, but I am a little unsure how we should implement it
- figured I'd just include it anyways!
+#include <boost/graph/adjacency_list.hpp>
+#include "maze.h"
 
-// intialize graph g using data, set start and end equal to the start and goal nodes
-void initializeGraph(Graph &g, Graph::vertex_descriptor &start, Graph::vertex_descriptor &goal, ifstream &fin)
+using namespace std;
+using namespace boost;
+
+struct VertexProperties;
+struct EdgeProperties;
+
+typedef adjacency_list<vecS, vecS, bidirectionalS, VertexProperties, EdgeProperties> Graph;
+
+struct VertexProperties
 {
-    EdgeProperties e;
-    
-    int n, i, j;
-    int startID, goalID;
-    fin >> n;
-    fin >> startID >> goalID;
-    Graph::vertex_descriptor v;
-    
-    // Add nodes.
-    for (int i = 0; i < n; i++)
-    {
-        v = add_vertex(g);
-        if (i == startID)
-            start = v;
-        if (i == goalID)
-            goal = v;
-    }
-    
-    while (fin.peek() != '.')
-    {
-        fin >> i >> j >> e.weight;
-        pair<Graph::edge_descriptor, bool> checkEdge = edge(i, j, g);
-        // If an edge doesn't already exist
-        if (!checkEdge.second)
-            add_edge(i, j, e, g);
-        // The edge exists but the newly discovered edge has a lower weight
-        else if (g[checkEdge.first].weight < e.weight)
-            g[checkEdge.first].weight = e.weight;
-        else
-            continue;
-    }
-}
+	pair<int,int> cell; // maze cell (x,y) value
+	Graph::vertex_descriptor pred; // predecessor node
+	int weight;
+	bool visited;
+	bool marked;
+};
 
- */
- 
-void relax(Graph &g, Graph::vertex_descriptor u, Graph::vertex_descriptor v)
+// Create a struct to hold properties for each edge
+struct EdgeProperties
 {
-    // get edge between u and v
-    pair<Graph::edge_descriptor, bool> checkEdge = edge(u, v, g);
-    
-    // make sure the edge exists
-    if (checkEdge.second != true) {
-        cout << "The edge does not exist!" << endl;
-    }
-    
-    // relax
-    if (g[v].weight > g[u].weight + g[checkEdge.first].weight)
-    {
-        g[v].weight = g[u].weight + g[checkEdge.first].weight;
-        g[v].pred = u;
-    }
-}
+	int weight;
+	bool visited;
+	bool marked;
+};
 
-bool dijkstra(Graph &g, Graph::vertex_descriptor s) {
+typedef adjacency_list<vecS, vecS, bidirectionalS, VertexProperties, EdgeProperties> Graph;
 
-} // end of dijikstra
+// typedef property<edge_weight_t, int> EdgeProperty;
 
+#define LargeValue 99999999
 
-bool bellmanFord(Graph &g, Graph::vertex_descriptor s){
+void clearVisited(Graph &g);
+// Mark all nodes in g as not visited.
 
-} // end bellmanFord
+void setNodeWeights(Graph &g, int w);
+// Set all node weights to w.
 
-
-
-
-
+void clearMarked(Graph &g);
 
 int main()
 {
-    
-    std::cout << "goodbye";
+	try
+	{
+		ifstream fin;
+		
+		// Read the maze from the file.
+		string fileName = "yourpath/maze1.txt";
+		
+		fin.open(fileName.c_str());
+		if (!fin)
+		{
+			cerr << "Cannot open " << fileName << endl;
+			exit(1);
+		}
+		
+		maze m(fin);
+		fin.close();
+		
+		m.print(m.numRows()-1,m.numCols()-1,0,0);
+		
+		Graph g;
+		m.mapMazeToGraph(g);
+		
+		cout << g << endl;
+	}
 }

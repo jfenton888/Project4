@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.13)
 project(Project4)
 
-if (CMAKE_BUILD_TYPE MATCHES Debug)
-    add_definitions(-DDEBUG=1)
-endif()
+set(CMAKE_CXX_STANDARD 14)
+
+find_package(Boost 1.72.0 COMPONENTS system filesystem REQUIRED)
 
 if(Boost_FOUND)
 
@@ -15,14 +15,11 @@ if(Boost_FOUND)
 
 endif()
 
-set(CMAKE_CXX_STANDARD 14)
-
-add_executable(Project4 main.cpp heapV.cpp heapV.h initializeGraph.cpp initializeGraph.h maze.cpp maze.h)
+add_executable(Project4 main.cpp boostGraph.h d_except.h heapV.cpp heapV.h initializeGraph.cpp initializeGraph.h matrix.cpp matrix.h maze.cpp maze.h)
 
 
 if(Boost_FOUND)
 
-    target_link_libraries(Project3 ${Boost_LIBRARIES})
+    target_link_libraries(Project4 ${Boost_LIBRARIES})
 
 endif()
-

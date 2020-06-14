@@ -1,5 +1,5 @@
 //
-// Project by Jack Fenton
+// Project by Jack Fenton, Jonathan Hsin, and Tamara Kahhale
 // Northeastern University Department of Computer and Electrical Engineering
 // EECE2560 Introduction to Engineering Algorithms
 // Project begun on 2020-06-12.
@@ -19,28 +19,36 @@
 #include <stack>
 
 #include "d_except.h"
-#include "d_matrix.h"
+#include "matrix.h"
 
+#include <boost/graph/adjacency_list.hpp>
+#include "boostGraph.h"
+
+using namespace boost;
 using namespace std;
 
 class maze
 {
+private:
+	int m_rows; // number of rows in the maze
+	int m_cols; // number of columns in the maze12 a
+	
+	matrix<bool> m_boolMaze;
+	
 public:
-	maze(ifstream &fin);
+	maze(ifstream &fin); //constructor
+	
 	void print(int,int,int,int);
 	bool isLegal(int i, int j);
 	void mapMazeToGraph(Graph &g);
 	void printPath(Graph::vertex_descriptor end,
 				   stack<Graph::vertex_descriptor> &s,
 				   Graph g);
-	int numRows(){return rows;};
-	int numCols(){return cols;};
-
-private:
-	int rows; // number of rows in the maze
-	int cols; // number of columns in the maze12 a
 	
-	matrix<bool> value;
+	int numRows(){return m_rows;};
+	int numCols(){return m_cols;};
+
+	
 };
 
 					 

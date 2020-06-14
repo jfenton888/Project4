@@ -17,7 +17,7 @@
 #include <vector>
 #include <stack>
 
-#include "d_excecpt.h"
+#include "d_except.h"
 #include "matrix.h"
 #include <boost/graph/adjacency_list.hpp>
 

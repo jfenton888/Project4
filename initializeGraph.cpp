@@ -5,6 +5,12 @@
 // Project begun on 2020-06-12.
 //
 
+#include <boost/graph/adjacency_list.hpp>
+
+#include "boostGraph.h"
+
+using namespace boost;
+
 #include "initializeGraph.h"
 
 void initializeGraph(Graph &g,
@@ -14,7 +20,7 @@ void initializeGraph(Graph &g,
 // to the start and end nodes.
 {
 	EdgeProperties e;
-	
+	/*
 	int n, i, j;
 	int startId, endId;
 	fin >> n;
@@ -36,4 +42,5 @@ void initializeGraph(Graph &g,
 		fin >> i >> j >> e.weight;
 		add_edge(i,j,e,g);
 	}
+	*/
 }

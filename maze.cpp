@@ -1,36 +1,48 @@
 //
-//  maze.cpp
-//  finalP
-//
-//  Created by Tamara Kahhale on 6/12/20.
-//  Copyright © 2020 Tamara Kahhale. All rights reserved.
+// Project by Jack Fenton, Jonathan Hsin, and Tamara Kahhale
+// Northeastern University Department of Computer and Electrical Engineering
+// EECE2560 Introduction to Engineering Algorithms
+// Project begun on 2020-06-12.
 //
 
+#include <iostream>
+#include <limits.h>
+#include <list>
+#include <fstream>
+#include <queue>
+#include <vector>
+#include <stack>
 
-#include "maze.hpp"
+#include "maze.h"
+#include "d_except.h"
+#include "matrix.h"
 #include <boost/graph/adjacency_list.hpp>
 
+#include "boostGraph.h"
+
+using namespace boost;
+using namespace std;
 
 // initialize a maze by reading values from fin
 maze::maze(ifstream &fin)
 {
-   fin >> rows;
-   fin >> cols;
+   fin >> m_rows;
+   fin >> m_cols;
    
    char x;
    
-   value.resize(rows,cols);
-   for (int i = 0; i <= rows-1; i++)
-      for (int j = 0; j <= cols-1; j++)
+    m_boolMaze.resize(m_rows,m_cols);
+   for (int i = 0; i <= m_rows-1; i++)
+      for (int j = 0; j <= m_cols-1; j++)
       {
          fin >> x;
          if (x == 'O')
-            value[i][j] = true;
+             m_boolMaze[i][j] = true;
          else
-            value[i][j] = false;
+             m_boolMaze[i][j] = false;
       }
    
-    vertices.resize(rows, cols);
+    vertices.resize(m_rows, m_cols);
 }
 
 // mark all nodes in g as not visited
@@ -79,27 +91,27 @@ void clearStack(stack<Graph::vertex_descriptor> &path){
 
 
 // print out a maze, with the goal and current cells marked on the board.
-void maze::print(int goalI, int goalJ, int currI, int currJ)
+void maze::print(int a_goalY, int a_goalX, int a_cY, int a_cX)
 {
    cout << endl;
 
-   if (goalI < 0 || goalI > rows || goalJ < 0 || goalJ > cols)
+   if (a_goalY < 0 || a_goalY > m_rows || a_goalX < 0 || a_goalX > m_cols)
       throw rangeError("Bad value in maze::print");
 
-   if (currI < 0 || currI > rows || currJ < 0 || currJ > cols)
+   if (a_cY < 0 || a_cY > m_rows || a_cX < 0 || a_cX > m_cols)
       throw rangeError("Bad value in maze::print");
 
-   for (int i = 0; i <= rows-1; i++)
+   for (int y = 0; y < m_rows; y++)
    {
-      for (int j = 0; j <= cols-1; j++)
+      for (int x = 0; x < m_cols; x++)
       {
-     if (i == goalI && j == goalJ)
+     if (y == a_goalY && x == a_goalX)
         cout << "*";
      else
-        if (i == currI && j == currJ)
+        if (y == a_cY && x == a_cX)
            cout << "+";
         else
-           if (value[i][j])
+           if (m_boolMaze[y][x])
           cout << " ";
            else
           cout << "X";
@@ -111,30 +123,30 @@ void maze::print(int goalI, int goalJ, int currI, int currJ)
 
 
 // return the value stored at the (i,j) entry in the maze, show whether it is legal to go to cell (i,j)
-bool maze::isLegal(int i, int j)
+bool maze::isLegal(int a_y, int a_x)
 {
-   if (i < 0 || i > rows || j < 0 || j > cols)
+   if (a_y < 0 || a_y > m_rows || a_x < 0 || a_x > m_cols)
       throw rangeError("Bad value in maze::isLegal");
 
-   return value[i][j];
+   return m_boolMaze[a_y][a_x];
 }
 
 // create a graph g that represents the legal moves in the maze m
-void maze::mapMazeToGraph(Graph &g)
+void maze::mapMazeToGraph(Graph &a_graph)
 {
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
+    for (int y = 0; y < m_rows; y++) {
+        for (int x = 0; x < m_cols; x++) {
             
-            if (isLegal(i, j)) {
-                Graph::vertex_descriptor v = add_vertex(g);
-                g[v].cell = pair<int, int>(i, j);
-                vertices[i][j] = v;
-                g[v].pred = 1;
-                if (i != 0 && value[i - 1][j]) {
-                    add_edge(vertices[i - 1][j], v, g);
+            if (isLegal(y, x)) {
+                Graph::vertex_descriptor v = add_vertex(a_graph);
+                a_graph[v].cell = pair<int, int>(y, x);
+                vertices[y][x] = v;
+                a_graph[v].pred = 1;
+                if (y != 0 && m_boolMaze[y - 1][x]) {
+                    add_edge(vertices[y - 1][x], v, a_graph);
                 }
-                if (j != 0 && value[i][j - 1]) {
-                    add_edge(vertices[i][j - 1], v, g);
+                if (x != 0 && m_boolMaze[y][x - 1]) {
+                    add_edge(vertices[y][x - 1], v, a_graph);
                 }
             }
         }

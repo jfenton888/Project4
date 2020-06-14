@@ -1,41 +1,28 @@
+//
+// Project by Jack Fenton, Jonathan Hsin, and Tamara Kahhale
+// Northeastern University Department of Computer and Electrical Engineering
+// EECE2560 Introduction to Engineering Algorithms
+// Project begun on 2020-06-12.
+//
+
 #include <iostream>
 #include <limits.h>
 #include <vector>
 #include <list>
 #include <fstream>
 #include <queue>
+#include <iterator>
+#include <algorithm>
 
-#include <boost/graph/adjacency_list.hpp>
 #include "maze.h"
 
-using namespace std;
+#include <boost/graph/adjacency_list.hpp>
+
+#include "boostGraph.h"
+
 using namespace boost;
+using namespace std;
 
-struct VertexProperties;
-struct EdgeProperties;
-
-typedef adjacency_list<vecS, vecS, bidirectionalS, VertexProperties, EdgeProperties> Graph;
-
-struct VertexProperties
-{
-	pair<int,int> cell; // maze cell (x,y) value
-	Graph::vertex_descriptor pred; // predecessor node
-	int weight;
-	bool visited;
-	bool marked;
-};
-
-// Create a struct to hold properties for each edge
-struct EdgeProperties
-{
-	int weight;
-	bool visited;
-	bool marked;
-};
-
-typedef adjacency_list<vecS, vecS, bidirectionalS, VertexProperties, EdgeProperties> Graph;
-
-// typedef property<edge_weight_t, int> EdgeProperty;
 
 #define LargeValue 99999999
 
@@ -46,6 +33,37 @@ void setNodeWeights(Graph &g, int w);
 // Set all node weights to w.
 
 void clearMarked(Graph &g);
+
+
+void relax(Graph &g, Graph::vertex_descriptor u, Graph::vertex_descriptor v)
+{
+	// get edge between u and v
+	pair<Graph::edge_descriptor, bool> checkEdge = edge(u, v, g);
+	
+	// make sure the edge exists
+	if (checkEdge.second != true) {
+		cout << "The edge does not exist!" << endl;
+	}
+	
+	// relax
+	if (g[v].weight > g[u].weight + g[checkEdge.first].weight)
+	{
+		g[v].weight = g[u].weight + g[checkEdge.first].weight;
+		g[v].pred = u;
+	}
+}
+
+bool dijkstra(Graph &g, Graph::vertex_descriptor s)
+{
+	return true;
+} // end of dijikstra
+
+
+bool bellmanFord(Graph &g, Graph::vertex_descriptor s)
+{
+	return true;
+} // end bellmanFord
+
 
 int main()
 {

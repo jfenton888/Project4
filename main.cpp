@@ -67,28 +67,27 @@ bool bellmanFord(Graph &g, Graph::vertex_descriptor s)
 
 int main()
 {
-	try
+
+	ifstream fin;
+	
+	// Read the maze from the file.
+	string fileName = "yourpath/maze1.txt";
+	
+	fin.open(fileName.c_str());
+	if (!fin)
 	{
-		ifstream fin;
-		
-		// Read the maze from the file.
-		string fileName = "yourpath/maze1.txt";
-		
-		fin.open(fileName.c_str());
-		if (!fin)
-		{
-			cerr << "Cannot open " << fileName << endl;
-			exit(1);
-		}
-		
-		maze m(fin);
-		fin.close();
-		
-		m.print(m.numRows()-1,m.numCols()-1,0,0);
-		
-		Graph g;
-		m.mapMazeToGraph(g);
-		
-		cout << g << endl;
+		cerr << "Cannot open " << fileName << endl;
+		exit(1);
 	}
+	
+	maze m(fin);
+	fin.close();
+	
+	m.print(m.numRows()-1,m.numCols()-1,0,0);
+	
+	Graph g;
+	m.mapMazeToGraph(g);
+	
+	//cout << g << endl;
+	
 }

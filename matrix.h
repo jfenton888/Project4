@@ -26,10 +26,9 @@ private:
 public:
     matrix(int a_nRows = 1, int a_nCols = 1,const T& a_initVal = T()); // constructor
     
-    vector<T>& operator[] (int a_index); // index operator
-    matrix<T> &operator=(matrix<T> a_mat);
-    
-    const vector<T>& operator[](int a_index) const;
+    //vector<T>& operator[] (int a_index); // index operator
+    //matrix<T> &operator=(matrix<T> a_mat);
+    //const vector<T>& operator[](int a_index) const;
     
     int rows() const {return m_nRows;}; // returns number of rows
     int cols() const {return m_nCols;}; // returns number of columns

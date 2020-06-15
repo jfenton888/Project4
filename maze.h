@@ -27,23 +27,35 @@
 using namespace boost;
 using namespace std;
 
+struct MazeProperties
+{
+	matrix<bool> value;
+	matrix<Graph::vertex_descriptor> vertex;
+};
+
+
+
 class maze
 {
 private:
 	int m_rows; // number of rows in the maze
-	int m_cols; // number of columns in the maze12 a
+	int m_cols; // number of columns in the maze
 	
-	matrix<bool> m_boolMaze;
+	//matrix<bool> m_boolMaze;
+	//matrix<Graph::vertex_descriptor> m_vertices;
 	
+	MazeProperties m_maze;
+
+
 public:
 	maze(ifstream &fin); //constructor
 	
-	void print(int,int,int,int);
-	bool isLegal(int i, int j);
-	void mapMazeToGraph(Graph &g);
-	void printPath(Graph::vertex_descriptor end,
-				   stack<Graph::vertex_descriptor> &s,
-				   Graph g);
+	void print(int a_goalY, int a_goalX, int a_cY, int a_cX);
+	bool isLegal(int a_y, int a_x);
+	void mapMazeToGraph(Graph &a_graph);
+	void printPath(Graph::vertex_descriptor a_end,
+				   stack<Graph::vertex_descriptor> &a_stack,
+				   Graph a_graph);
 	
 	int numRows(){return m_rows;};
 	int numCols(){return m_cols;};

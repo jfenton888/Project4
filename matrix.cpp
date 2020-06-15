@@ -22,38 +22,38 @@ matrix<T>::matrix(int a_nRows, int a_nCols, const T& a_initVal):
 		mat(a_nRows, vector<T>(a_nCols, a_initVal))
 {}
 
-//
-//// non-constant version: provides general access to matrix elements
-//template <typename T>
-//vector<T>& matrix<T>::operator[] (int a_index)
-//{
-//	if (a_index < 0 || a_index >= m_nRows)
-//		throw indexRangeError("matrix: invalid row index", a_index, m_nRows);
-//
-//	return mat[a_index];
-//}
-//
-//
-//// constant version, does not allow modification of a matrix element
-//template <typename T>
-//const vector<T>& matrix<T>::operator[] (int a_index) const
-//{
-//	if (a_index < 0 || a_index >= m_nRows)
-//		throw indexRangeError("matrix: invalid row index", a_index, m_nRows);
-//
-//	return mat[a_index];
-//}
-//
-//
-//template <typename T>
-//matrix<T> &matrix<T>::operator=(matrix<T> a_mat)
-//{
-//	for (int i = 0; i < rows(); i++)
-//		for (int j = 0; j < cols(); j++)
-//			(*this)[i][j] = a_mat[i][j];
-//
-//	return *this;
-//}
+
+// non-constant version: provides general access to matrix elements
+template <typename T>
+vector<T>& matrix<T>::operator[] (int a_index)
+{
+	if (a_index < 0 || a_index >= m_nRows)
+		throw indexRangeError("matrix: invalid row index", a_index, m_nRows);
+	
+	return mat[a_index];
+}
+
+
+// constant version, does not allow modification of a matrix element
+template <typename T>
+const vector<T>& matrix<T>::operator[] (int a_index) const
+{
+	if (a_index < 0 || a_index >= m_nRows)
+		throw indexRangeError("matrix: invalid row index", a_index, m_nRows);
+	
+	return mat[a_index];
+}
+
+
+template <typename T>
+matrix<T> &matrix<T>::operator=(matrix<T> a_mat)
+{
+	for (int i = 0; i < rows(); i++)
+		for (int j = 0; j < cols(); j++)
+			(*this)[i][j] = a_mat[i][j];
+	
+	return *this;
+}
 
 
 template <typename T>

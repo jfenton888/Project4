@@ -66,9 +66,31 @@ bool bellmanFord(Graph &g, Graph::vertex_descriptor s)
 } // end bellmanFord
 
 
+template <typename T>
+void StackDebug(std::stack<T> s)
+{
+	std::vector<T> debugVector = std::vector<T>();
+	while (!s.empty( ) )
+	{
+		T t = s.top( );
+		debugVector.push_back(t);
+		s.pop( );
+	}
+	
+	// stack, read from top down, is reversed relative to its creation (from bot to top)
+	std::reverse(debugVector.begin(), debugVector.end());
+	for(const auto& it : debugVector)
+	{
+		std::cout << it << " ";
+	}
+}
+
+
+
+
 int main()
 {
-
+	
 	ifstream fin;
 	
 	// Read the maze from the file.
@@ -84,24 +106,31 @@ int main()
 	maze m(fin);
 	fin.close();
 	
-	m.print(m.numRows()-1,m.numCols()-1,0,0);
-	
+	//m.print(m.numRows() - 1, m.numCols() - 1, 0, 0);
 	
 	
 	Graph graph;
 	m.mapMazeToGraph(graph);
 	
-	m.printGraphProperties(graph);
+	//m.printGraphProperties(graph);
 	
 	findPath solver;
 	stack<Graph::vertex_descriptor> bestPath;
 	
 	Graph::vertex_descriptor startGraph, endGraph;
-	startGraph = m.getVertex(0,0);
-	endGraph = m.getVertex(m.numRows()-1, m.numCols()-1);
 	
-	solver.findShortestPathBFS(graph, startGraph, endGraph, bestPath);
+	startGraph = m.getVertex(0, 0);
+	endGraph = m.getVertex(m.numRows() - 1, m.numCols() - 1);
+	
+	solver.findShortestPathDFS(graph, startGraph, endGraph, bestPath);
+	
+	StackDebug(bestPath);
 	
 	m.printPath(graph, endGraph, bestPath);
 	
 }
+
+
+
+
+

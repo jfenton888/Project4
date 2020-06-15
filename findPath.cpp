@@ -79,6 +79,9 @@ bool findPath::traverseDFSRecursive(Graph &a_graph,
 						  stack<Graph::vertex_descriptor> &a_path)
 {
 	// check to see if we are at the goal
+	
+	cout<<"("<<a_graph[a_vertex].cell.second<<", "<<a_graph[a_vertex].cell.first<<") \n";
+	
 	if (a_vertex == a_goal)
 	{
 		a_path.push(a_vertex);
@@ -114,7 +117,7 @@ bool findPath::findPathDFSRecursive(Graph& a_graph,
 						  stack<Graph::vertex_descriptor>& a_path)
 {
 	clearVisited(a_graph);
-	a_path.push(a_start);
+	
 	return traverseDFSRecursive(a_graph, a_start, a_goal, a_path);
 }
 
@@ -158,15 +161,16 @@ bool findPath::findPathDFSStack(Graph &a_graph,
 		}
 	}
 	
-	if (found)
+	if (found) //track back from end to beginning using previous
 	{
-		while (currV != -1)
+		currV = a_goal;
+		while (currV != a_start)
 		{
 			a_path.push(currV);
 			currV = a_graph[currV].pred;
 		}
+		a_path.push(a_start);
 	}
-	
 	return found;
 }
 
@@ -241,7 +245,7 @@ bool findPath::findShortestPathBFS(Graph &a_graph,
 		
 		currV = qVertices.front();
 		
-		cout<<"("<<a_graph[currV].cell.second<<", "<<a_graph[currV].cell.first<<") \n";
+		//cout<<"("<<a_graph[currV].cell.second<<", "<<a_graph[currV].cell.first<<") \n";
 		
 		qVertices.pop();
 		if (!a_graph[currV].visited)

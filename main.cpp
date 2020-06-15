@@ -15,6 +15,7 @@
 #include <algorithm>
 
 #include "maze.h"
+#include "findPath.h"
 
 #include <boost/graph/adjacency_list.hpp>
 
@@ -71,7 +72,7 @@ int main()
 	ifstream fin;
 	
 	// Read the maze from the file.
-	string fileName = "maze-files/maze1.txt";
+	string fileName = "maze-files/maze13.txt";
 	
 	fin.open(fileName.c_str());
 	if (!fin)
@@ -85,9 +86,22 @@ int main()
 	
 	m.print(m.numRows()-1,m.numCols()-1,0,0);
 	
-	Graph g;
-	m.mapMazeToGraph(g);
 	
-	//cout << g << endl;
+	
+	Graph graph;
+	m.mapMazeToGraph(graph);
+	
+	m.printGraphProperties(graph);
+	
+	findPath solver;
+	stack<Graph::vertex_descriptor> bestPath;
+	
+	Graph::vertex_descriptor startGraph, endGraph;
+	startGraph = m.getVertex(0,0);
+	endGraph = m.getVertex(m.numRows()-1, m.numCols()-1);
+	
+	solver.findShortestPathBFS(graph, startGraph, endGraph, bestPath);
+	
+	m.printPath(graph, endGraph, bestPath);
 	
 }

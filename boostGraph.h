@@ -16,7 +16,7 @@ using namespace std;
 struct VertexProperties;
 struct EdgeProperties;
 
-typedef adjacency_list<vecS, vecS, bidirectionalS, VertexProperties, EdgeProperties> Graph;
+typedef adjacency_list<vecS, vecS, undirectedS, VertexProperties, EdgeProperties> Graph;
 
 struct VertexProperties
 {

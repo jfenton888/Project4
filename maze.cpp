@@ -113,22 +113,22 @@ void maze::mapMazeToGraph(Graph &a_graph)
                 m_maze[y][x].vertex = v;
                 //vertices[y][x] = v;
                 a_graph[v].pred = 1;
-                if (y != 0 && m_maze[y - 1][x].value) {
-                    cout<<"("<<x<<", "<<y<<") Up \n";
+                if (y != 0 && m_maze[y - 1][x].value)
+//                    cout<<"("<<x<<", "<<y<<") Up \n";
                     add_edge(m_maze[y - 1][x].vertex, v, a_graph);
-                }
-                if (x != 0 && m_maze[y][x - 1].value) {
-                    cout<<"("<<x<<", "<<y<<") Left \n";
+                
+                if (x != 0 && m_maze[y][x - 1].value)
+//                    cout<<"("<<x<<", "<<y<<") Left \n";
                     add_edge(m_maze[y][x - 1].vertex, v, a_graph);
-                }
-                if (y != m_rows-1 && m_maze[y + 1][x].value) {
-                    cout<<"("<<x<<", "<<y<<") Down \n";
-                    add_edge(m_maze[y + 1][x].vertex, v, a_graph);
-                }
-                if (x != m_cols-1 && m_maze[y][x + 1].value) {
-                    cout<<"("<<x<<", "<<y<<") Right \n";
-                    add_edge(m_maze[y][x + 1].vertex, v, a_graph);
-                }
+                
+//                if (y != m_rows-1 && m_maze[y + 1][x].value) {
+//                    cout<<"("<<x<<", "<<y<<") Down \n";
+//                    add_edge(m_maze[y + 1][x].vertex, v, a_graph);
+//                }
+//                if (x != m_cols-1 && m_maze[y][x + 1].value) {
+//                    cout<<"("<<x<<", "<<y<<") Right \n";
+//                    add_edge(m_maze[y][x + 1].vertex, v, a_graph);
+//                }
 
             }
         }

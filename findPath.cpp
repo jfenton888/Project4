@@ -5,6 +5,7 @@
 // Project begun on 2020-06-14.
 //
 
+#include <iostream>
 #include <queue>
 #include <stack>
 
@@ -232,9 +233,16 @@ bool findPath::findShortestPathBFS(Graph &a_graph,
 	qVertices.push(a_start);
 	Graph::vertex_descriptor currV;
 	
+	pair<int,int> cell = a_graph[a_start].cell;
+	
+	
 	while (!qVertices.empty() && !found)
 	{
+		
 		currV = qVertices.front();
+		
+		cout<<"("<<a_graph[currV].cell.second<<", "<<a_graph[currV].cell.first<<") \n";
+		
 		qVertices.pop();
 		if (!a_graph[currV].visited)
 		{

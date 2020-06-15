@@ -31,8 +31,7 @@ maze::maze(ifstream &fin)
    
    char x;
    
-   m_maze.value.resize(m_rows,m_cols);
-   m_maze.vertex.resize(m_rows,m_cols);
+   m_maze.resize(m_rows,m_cols);
    
    //m_boolMaze.resize(m_rows,m_cols);
    //m_vertices.resize(m_rows, m_cols);
@@ -44,10 +43,10 @@ maze::maze(ifstream &fin)
        {
            fin >> x;
            if (x == 'O')
-               m_maze.value[i][j] = true;
+               m_maze[i][j].value = true;
                //m_boolMaze[i][j] = true;
            else
-               m_maze.value[i][j] = false;
+               m_maze[i][j].value = false;
            //m_boolMaze[i][j] = false;
        }
    }
@@ -76,11 +75,11 @@ void maze::print(int a_goalY, int a_goalX, int a_cY, int a_cX)
                if (y == a_cY && x == a_cX)
                    cout << "+";
                else
-                   if (m_maze.value[y][x])
+                   if (m_maze[y][x].value)
                        //if (m_boolMaze[y][x])
                        cout << " ";
                    else
-                       cout << "X";
+                       cout << "▓";
        }
        cout << endl;
    }
@@ -94,7 +93,7 @@ bool maze::isLegal(int a_y, int a_x)
    if (a_y < 0 || a_y > m_rows || a_x < 0 || a_x > m_cols)
       throw rangeError("Bad value in maze::isLegal");
    
-   return m_maze.value[a_y][a_x];
+   return m_maze[a_y][a_x].value;
    //return m_boolMaze[a_y][a_x];
 }
 
@@ -108,14 +107,14 @@ void maze::mapMazeToGraph(Graph &a_graph)
             if (isLegal(y, x)) {
                 Graph::vertex_descriptor v = add_vertex(a_graph);
                 a_graph[v].cell = pair<int, int>(y, x);
-                m_maze.vertex[y][x] = v;
+                m_maze[y][x].vertex = v;
                 //vertices[y][x] = v;
                 a_graph[v].pred = 1;
-                if (y != 0 && m_maze.value[y - 1][x]) {
-                    add_edge(m_maze.vertex[y - 1][x], v, a_graph);
+                if (y != 0 && m_maze[y - 1][x].value) {
+                    add_edge(m_maze[y - 1][x].vertex, v, a_graph);
                 }
-                if (x != 0 && m_maze.value[y][x - 1]) {
-                    add_edge(m_maze.vertex[y][x - 1], v, a_graph);
+                if (x != 0 && m_maze[y][x - 1].value) {
+                    add_edge(m_maze[y][x - 1].vertex, v, a_graph);
                 }
 //                if (y != 0 && m_boolMaze[y - 1][x]) {
 //                    add_edge(m_vertices[y - 1][x], v, a_graph);

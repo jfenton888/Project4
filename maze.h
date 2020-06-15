@@ -30,8 +30,8 @@ using namespace std;
 
 struct MazeProperties
 {
-	matrix<bool> value;
-	matrix<Graph::vertex_descriptor> vertex;
+	bool value;
+	Graph::vertex_descriptor vertex;
 };
 
 
@@ -42,10 +42,7 @@ private:
 	int m_rows; // number of rows in the maze
 	int m_cols; // number of columns in the maze
 	
-	//matrix<bool> m_boolMaze;
-	//matrix<Graph::vertex_descriptor> m_vertices;
-	
-	MazeProperties m_maze;
+	matrix<MazeProperties> m_maze;
 
 
 public:

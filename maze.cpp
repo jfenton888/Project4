@@ -101,27 +101,35 @@ bool maze::isLegal(int a_y, int a_x)
 // create a graph g that represents the legal moves in the maze m
 void maze::mapMazeToGraph(Graph &a_graph)
 {
-    for (int y = 0; y < m_rows; y++) {
-        for (int x = 0; x < m_cols; x++) {
+    for (int y = 0; y < m_rows; y++)
+    {
+        for (int x = 0; x < m_cols; x++)
+        {
             
-            if (isLegal(y, x)) {
+            if (isLegal(y, x))
+            {
                 Graph::vertex_descriptor v = add_vertex(a_graph);
                 a_graph[v].cell = pair<int, int>(y, x);
                 m_maze[y][x].vertex = v;
                 //vertices[y][x] = v;
                 a_graph[v].pred = 1;
                 if (y != 0 && m_maze[y - 1][x].value) {
+                    cout<<"("<<x<<", "<<y<<") Up \n";
                     add_edge(m_maze[y - 1][x].vertex, v, a_graph);
                 }
                 if (x != 0 && m_maze[y][x - 1].value) {
+                    cout<<"("<<x<<", "<<y<<") Left \n";
                     add_edge(m_maze[y][x - 1].vertex, v, a_graph);
                 }
-//                if (y != 0 && m_boolMaze[y - 1][x]) {
-//                    add_edge(m_vertices[y - 1][x], v, a_graph);
-//                }
-//                if (x != 0 && m_boolMaze[y][x - 1]) {
-//                    add_edge(m_vertices[y][x - 1], v, a_graph);
-//                }
+                if (y != m_rows-1 && m_maze[y + 1][x].value) {
+                    cout<<"("<<x<<", "<<y<<") Down \n";
+                    add_edge(m_maze[y + 1][x].vertex, v, a_graph);
+                }
+                if (x != m_cols-1 && m_maze[y][x + 1].value) {
+                    cout<<"("<<x<<", "<<y<<") Right \n";
+                    add_edge(m_maze[y][x + 1].vertex, v, a_graph);
+                }
+
             }
         }
     }
@@ -129,9 +137,10 @@ void maze::mapMazeToGraph(Graph &a_graph)
 
 
 // prints the path represented by the vertices in stack s
-void maze::printPath(Graph::vertex_descriptor a_end,
-                     stack<Graph::vertex_descriptor> &a_stack,
-                     Graph a_graph)
+void maze::printPath(Graph a_graph,
+                     Graph::vertex_descriptor a_end,
+                     stack<Graph::vertex_descriptor> &a_stack
+                     )
 {
     // initialize a pair to store values while iterating through the stack
     pair<int,int> curr;
@@ -149,9 +158,52 @@ void maze::printPath(Graph::vertex_descriptor a_end,
     }
 }
 
-// output operator for the Graph class, prints out all nodes&properties and edges&properties
+
+void maze::printGraphProperties(Graph &a_graph) const
+{
+    //int numEdge = 0;
+    
+    pair<Graph::vertex_iterator, Graph::vertex_iterator> vItrRange = vertices(a_graph);
+    
+    for (Graph::vertex_iterator vItr = vItrRange.first; vItr != vItrRange.second; ++vItr)
+    {
+        cout << "Vertex: " << *vItr << endl;
+        cout << "Cell: (" << a_graph[*vItr].cell.second << ", " <<
+             a_graph[*vItr].cell.first << ")" << endl;
+        cout << "Predecesor: " << a_graph[*vItr].pred << endl;
+        cout << "Weight: " << a_graph[*vItr].weight << endl;
+        cout << "Visited: " << a_graph[*vItr].visited << endl;
+        cout << "Marked: " << a_graph[*vItr].marked << endl;
+    
+        pair<Graph::adjacency_iterator, Graph::adjacency_iterator> vAdjItrRange = adjacent_vertices(*vItr, a_graph);
+        for (Graph::adjacency_iterator vAdjItr= vAdjItrRange.first; vAdjItr != vAdjItrRange.second; ++vAdjItr)
+            cout << "Adjacent to: "<<*vAdjItr<< " at (" << a_graph[*vAdjItr].cell.second << ", " <<
+                                             a_graph[*vAdjItr].cell.first << ")" << endl;
+        cout << endl;
+    }
+    
+    pair<Graph::edge_iterator, Graph::edge_iterator> eItrRange = edges(a_graph);
+    
+    for (Graph::edge_iterator eItr = eItrRange.first; eItr != eItrRange.second; ++eItr)
+    {
+        //numEdge++;
+        cout << "Edge: " << *eItr << endl;
+        cout << "Origin Vertex: " << source(*eItr, a_graph) << endl;
+        cout << "Target Vertex: " << target(*eItr, a_graph) << endl;
+        cout << "Weight: " << a_graph[*eItr].weight << endl;
+        cout << "Visited: " << a_graph[*eItr].visited << endl;
+        cout << "Marked: " << a_graph[*eItr].marked << endl << endl;
+    }
+    
+    
+    
+}
+
+
+
 /*
-ostream &operator<<(ostream &ostr, const Graph &a_graph)
+// output operator for the Graph class, prints out all nodes&properties and edges&properties
+ostream &operator<<(ostream &cout, const Graph &a_graph)
 {
     int numEdge = 0;
     pair<Graph::edge_iterator, Graph::edge_iterator> eItrRange = edges(a_graph);
@@ -159,27 +211,27 @@ ostream &operator<<(ostream &ostr, const Graph &a_graph)
     for (Graph::edge_iterator eItr = eItrRange.first; eItr != eItrRange.second; ++eItr)
     {
         numEdge++;
-        ostr << "Edge: " << *eItr << endl;
-        ostr << "Origin Vertex: " << source(*eItr, a_graph) << endl;
-        ostr << "Target Vertex: " << target(*eItr, a_graph) << endl;
-        ostr << "Weight: " << a_graph[*eItr].weight << endl;
-        ostr << "Visited: " << a_graph[*eItr].visited << endl;
-        ostr << "Marked: " << a_graph[*eItr].marked << endl << endl;
+        cout << "Edge: " << *eItr << endl;
+        cout << "Origin Vertex: " << source(*eItr, a_graph) << endl;
+        cout << "Target Vertex: " << target(*eItr, a_graph) << endl;
+        cout << "Weight: " << a_graph[*eItr].weight << endl;
+        cout << "Visited: " << a_graph[*eItr].visited << endl;
+        cout << "Marked: " << a_graph[*eItr].marked << endl << endl;
     }
     
     pair<Graph::vertex_iterator, Graph::vertex_iterator> vItrRange = vertices(a_graph);
     
     for (Graph::vertex_iterator vItr = vItrRange.first; vItr != vItrRange.second; ++vItr)
     {
-        ostr << "Vertex: " << *vItr << endl;
-        ostr << "Cell: (" << a_graph[*vItr].cell.first << ", " <<
+        cout << "Vertex: " << *vItr << endl;
+        cout << "Cell: (" << a_graph[*vItr].cell.first << ", " <<
                 a_graph[*vItr].cell.second << ")" << endl;
-        ostr << "Predecesor: " << a_graph[*vItr].pred << endl;
-        ostr << "Weight: " << a_graph[*vItr].weight << endl;
-        ostr << "Visited: " << a_graph[*vItr].visited << endl;
-        ostr << "Marked: " << a_graph[*vItr].marked << endl << endl;
+        cout << "Predecesor: " << a_graph[*vItr].pred << endl;
+        cout << "Weight: " << a_graph[*vItr].weight << endl;
+        cout << "Visited: " << a_graph[*vItr].visited << endl;
+        cout << "Marked: " << a_graph[*vItr].marked << endl << endl;
     }
-    return ostr;
+    return cout;
 }
 */
 

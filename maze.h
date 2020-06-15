@@ -51,13 +51,18 @@ public:
 	void print(int a_goalY, int a_goalX, int a_cY, int a_cX);
 	bool isLegal(int a_y, int a_x);
 	void mapMazeToGraph(Graph &a_graph);
-	void printPath(Graph::vertex_descriptor a_end,
-				   stack<Graph::vertex_descriptor> &a_stack,
-				   Graph a_graph);
+	void printPath(Graph a_graph,
+				   Graph::vertex_descriptor a_end,
+				   stack<Graph::vertex_descriptor> &a_stack);
 	
 	int numRows(){return m_rows;};
 	int numCols(){return m_cols;};
-
+	
+	bool getValue(int a_row, int a_col) const {return m_maze[a_row][a_col].value;};
+	Graph::vertex_descriptor getVertex(int a_row, int a_col) const {return m_maze[a_row][a_col].vertex;};
+	
+	void printGraphProperties(Graph &a_graph) const;
+	friend ostream& operator<<(ostream& cout, const Graph &a_graph);
 	
 };
 

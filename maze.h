@@ -27,6 +27,7 @@
 using namespace boost;
 using namespace std;
 
+
 struct MazeProperties
 {
 	matrix<bool> value;

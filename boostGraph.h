@@ -16,12 +16,24 @@ using namespace std;
 struct VertexProperties;
 struct EdgeProperties;
 
-typedef adjacency_list<vecS, vecS, undirectedS, VertexProperties, EdgeProperties> Graph;
+typedef adjacency_list<vecS, vecS, undirectedS, DVertexProperties, EdgeProperties> uGraph;
 
-struct VertexProperties
+typedef adjacency_list<vecS, vecS, directedS, DVertexProperties, EdgeProperties> dGraph;
+
+
+struct DVertexProperties
 {
 	pair<int,int> cell; // maze cell (x,y) value
-	Graph::vertex_descriptor pred; // predecessor node
+	dGraph::vertex_descriptor pred; // predecessor node
+	int weight;
+	bool visited;
+	bool marked;
+};
+
+struct UVertexProperties
+{
+	pair<int,int> cell; // maze cell (x,y) value
+	uGraph::vertex_descriptor pred; // predecessor node
 	int weight;
 	bool visited;
 	bool marked;

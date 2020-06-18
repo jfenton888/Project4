@@ -14,6 +14,7 @@
 #include <iterator>
 #include <algorithm>
 
+#include "heapV.h"
 #include "maze.h"
 #include "findPath.h"
 
@@ -27,19 +28,55 @@ using namespace std;
 
 #define LargeValue 99999999
 
-void clearVisited(Graph &g);
+void clearVisited(uGraph &g);
 // Mark all nodes in g as not visited.
 
-void setNodeWeights(Graph &g, int w);
+void setNodeWeights(uGraph &g, int w);
 // Set all node weights to w.
 
-void clearMarked(Graph &g);
+void clearMarked(uGraph &g);
 
 
-void relax(Graph &g, Graph::vertex_descriptor u, Graph::vertex_descriptor v)
+void initializeGraph(dGraph &g,
+					 dGraph::vertex_descriptor &start,
+					 dGraph::vertex_descriptor &end, ifstream &fin)
+// Initialize g using data from fin.  Set start and end equal
+// to the start and end nodes.
+{
+	EdgeProperties e;
+	
+	int n, i, j;
+	int startId, endId;
+	fin >> n;
+	fin >> startId >> endId;
+	dGraph::vertex_descriptor v;
+	
+	// Add nodes.
+	for (int i = 0; i < n; i++)
+	{
+		v = add_vertex(g);
+		if (i == startId)
+			start = v;
+		if (i == endId)
+			end = v;
+	}
+	
+	while (fin.peek() != '.')
+	{
+		fin >> i >> j >> e.weight;
+		add_edge(i,j,e,g);
+	}
+	
+}
+
+
+
+
+
+void relax(uGraph &g, uGraph::vertex_descriptor u, uGraph::vertex_descriptor v)
 {
 	// get edge between u and v
-	pair<Graph::edge_descriptor, bool> checkEdge = edge(u, v, g);
+	pair<uGraph::edge_descriptor, bool> checkEdge = edge(u, v, g);
 	
 	// make sure the edge exists
 	if (checkEdge.second != true) {
@@ -54,13 +91,22 @@ void relax(Graph &g, Graph::vertex_descriptor u, Graph::vertex_descriptor v)
 	}
 }
 
-bool dijkstra(Graph &g, Graph::vertex_descriptor s)
+bool dijkstra(dGraph &a_graph, dGraph::vertex_descriptor a_start)
 {
+	heapV<dGraph::vertex_descriptor, dGraph> queue;
+	queue.minHeapInsert(a_start, a_graph);
+	
+//	while (queue.size()>0)
+//	{
+//
+//	}
+	
+	
 	return true;
 } // end of dijikstra
 
 
-bool bellmanFord(Graph &g, Graph::vertex_descriptor s)
+bool bellmanFord(dGraph &g, dGraph::vertex_descriptor s)
 {
 	return true;
 } // end bellmanFord
@@ -109,15 +155,15 @@ int main()
 	//m.print(m.numRows() - 1, m.numCols() - 1, 0, 0);
 	
 	
-	Graph graph;
+	uGraph graph;
 	m.mapMazeToGraph(graph);
 	
 	//m.printGraphProperties(graph);
 	
 	findPath solver;
-	stack<Graph::vertex_descriptor> bestPath;
+	stack<uGraph::vertex_descriptor> bestPath;
 	
-	Graph::vertex_descriptor startGraph, endGraph;
+	uGraph::vertex_descriptor startGraph, endGraph;
 	
 	startGraph = m.getVertex(0, 0);
 	endGraph = m.getVertex(m.numRows() - 1, m.numCols() - 1);

@@ -213,29 +213,29 @@ bool findPath::traverseDFSShortest(Graph &a_graph,
 }
 
 // find shortest path for DFS
-bool findPath::findShortestPathDFS(Graph &a_graph,
-						 Graph::vertex_descriptor a_start,
-						 Graph::vertex_descriptor a_goal,
-						 stack<Graph::vertex_descriptor> &a_path)
+bool findPath::findShortestPathDFS(uGraph &a_graph,
+						 uGraph::vertex_descriptor a_start,
+						 uGraph::vertex_descriptor a_goal,
+						 stack<uGraph::vertex_descriptor> &a_path)
 {
 	clearVisited(a_graph);
-	stack<Graph::vertex_descriptor> tempStack;
+	stack<uGraph::vertex_descriptor> tempStack;
 	return traverseDFSShortest(a_graph, a_start, a_goal, tempStack, a_path);
 }
 
 // search using BFS
-bool findPath::findShortestPathBFS(Graph &a_graph,
-						 Graph::vertex_descriptor a_start,
-						 Graph::vertex_descriptor a_goal,
-						 stack<Graph::vertex_descriptor> &a_path)
+bool findPath::findShortestPathBFS(uGraph &a_graph,
+						 uGraph::vertex_descriptor a_start,
+						 uGraph::vertex_descriptor a_goal,
+						 stack<uGraph::vertex_descriptor> &a_path)
 {
 	
 	clearVisited(a_graph);
 	bool found = false;
 	
-	queue<Graph::vertex_descriptor> qVertices;
+	queue<uGraph::vertex_descriptor> qVertices;
 	qVertices.push(a_start);
-	Graph::vertex_descriptor currV;
+	uGraph::vertex_descriptor currV;
 	
 	pair<int,int> cell = a_graph[a_start].cell;
 	
@@ -254,9 +254,9 @@ bool findPath::findShortestPathBFS(Graph &a_graph,
 			if (currV == a_goal)
 				found = true;
 			
-			pair<Graph::adjacency_iterator, Graph::adjacency_iterator> vItrRange = adjacent_vertices(currV, a_graph);
+			pair<uGraph::adjacency_iterator, uGraph::adjacency_iterator> vItrRange = adjacent_vertices(currV, a_graph);
 			
-			for (Graph::adjacency_iterator vItr = vItrRange.first; vItr != vItrRange.second; ++vItr)
+			for (uGraph::adjacency_iterator vItr = vItrRange.first; vItr != vItrRange.second; ++vItr)
 			{
 				if (!a_graph[*vItr].visited)
 				{

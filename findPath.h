@@ -17,41 +17,41 @@ class findPath
 {
 
 public:
-	void clearVisited(Graph &a_graph);
-	void setNodeWeights(Graph &a_graph, int a_value);
-	void clearMarked(Graph &a_graph);
-	void clearStack(stack<Graph::vertex_descriptor> &a_path);
+	void clearVisited(uGraph &a_graph);
+	void setNodeWeights(uGraph &a_graph, int a_value);
+	void clearMarked(uGraph &a_graph);
+	void clearStack(stack<uGraph::vertex_descriptor> &a_path);
 	
-	bool traverseDFSRecursive(Graph &a_graph,
-							  Graph::vertex_descriptor a_vertex,
-							  Graph::vertex_descriptor a_goal,
-							  stack<Graph::vertex_descriptor> &a_path);
+	bool traverseDFSRecursive(uGraph &a_graph,
+							  uGraph::vertex_descriptor a_vertex,
+							  uGraph::vertex_descriptor a_goal,
+							  stack<uGraph::vertex_descriptor> &a_path);
 	
-	bool findPathDFSRecursive(Graph& a_graph,
-							  Graph::vertex_descriptor a_start,
-							  Graph::vertex_descriptor a_goal,
-							  stack<Graph::vertex_descriptor>& a_path);
+	bool findPathDFSRecursive(uGraph& a_graph,
+							  uGraph::vertex_descriptor a_start,
+							  uGraph::vertex_descriptor a_goal,
+							  stack<uGraph::vertex_descriptor>& a_path);
 	
-	bool findPathDFSStack(Graph &a_graph,
-						  Graph::vertex_descriptor a_start,
-						  Graph::vertex_descriptor a_goal,
-						  stack<Graph::vertex_descriptor> &a_path);
+	bool findPathDFSStack(uGraph &a_graph,
+						  uGraph::vertex_descriptor a_start,
+						  uGraph::vertex_descriptor a_goal,
+						  stack<uGraph::vertex_descriptor> &a_path);
 	
-	bool traverseDFSShortest(Graph &a_graph,
-							 Graph::vertex_descriptor a_vertex,
-							 Graph::vertex_descriptor a_goal,
-							 stack<Graph::vertex_descriptor> &a_tempStack,
-							 stack<Graph::vertex_descriptor> &a_path);
+	bool traverseDFSShortest(uGraph &a_graph,
+							 uGraph::vertex_descriptor a_vertex,
+							 uGraph::vertex_descriptor a_goal,
+							 stack<uGraph::vertex_descriptor> &a_tempStack,
+							 stack<uGraph::vertex_descriptor> &a_path);
 	
-	bool findShortestPathDFS(Graph &a_graph,
-							 Graph::vertex_descriptor a_start,
-							 Graph::vertex_descriptor a_goal,
-							 stack<Graph::vertex_descriptor> &a_path);
+	bool findShortestPathDFS(uGraph &a_graph,
+							 uGraph::vertex_descriptor a_start,
+							 uGraph::vertex_descriptor a_goal,
+							 stack<uGraph::vertex_descriptor> &a_path);
 	
-	bool findShortestPathBFS(Graph &a_graph,
-							 Graph::vertex_descriptor a_start,
-							 Graph::vertex_descriptor a_goal,
-							 stack<Graph::vertex_descriptor> &a_path);
+	bool findShortestPathBFS(uGraph &a_graph,
+							 uGraph::vertex_descriptor a_start,
+							 uGraph::vertex_descriptor a_goal,
+							 stack<uGraph::vertex_descriptor> &a_path);
 	
 	
 	

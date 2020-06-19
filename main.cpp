@@ -114,12 +114,16 @@ bool dijkstra(Graph &a_graph, Graph::vertex_descriptor a_start)
 	initializeSingleSource(a_graph, a_start);
 	
 	for (Graph::vertex_iterator vItr = vItrRange.first; vItr != vItrRange.second; ++vItr)
-		queue.minHeapInsert(a_start, a_graph);
+		queue.minHeapInsert(*vItr, a_graph);
 	
 	clearVisited(a_graph);
 	while (queue.size()>0)
 	{
 		currV=queue.extractMinHeapMinimum(a_graph);
+		
+		//cout<<"Exploring Node "<<currV<<endl;
+		//cout<<queue;
+		
 		a_graph[currV].visited=true;
 		
 		pair<Graph::adjacency_iterator, Graph::adjacency_iterator> vAdjItrRange = adjacent_vertices(currV, a_graph);
@@ -226,7 +230,7 @@ int main()
 	ifstream fin;
 	
 	// Read the maze from the file.
-	string fileName = "graph/graph1.txt";
+	string fileName = "graph/graph2.txt";
 	
 	fin.open(fileName.c_str());
 	if (!fin)
@@ -237,7 +241,7 @@ int main()
 	initializeGraph(graph, startNode, goalNode, fin);
 	
 	
-	if(bellmanFord(graph, startNode))
+	if(dijkstra(graph, startNode))
 	{
 		generateStack(graph, startNode, goalNode, bestPath);
 		

@@ -243,7 +243,7 @@ ostream &operator<<(ostream &ostr, heapV<T,U> &a_heap)
 {
 	cout << "------------------------------------------------" << endl;
 	for (int index = 0; index < a_heap.size(); index++)
-		cout << a_heap.getItem(index);
+		cout << index<< " "<< a_heap.getItem(index)<<endl;
 	
 	cout << endl;
 	

@@ -17,7 +17,7 @@
 #include <vector>
 #include <stack>
 
-#include "d_excecpt.h"
+#include "d_except.h"
 #include "matrix.h"
 #include <boost/graph/adjacency_list.hpp>
 
@@ -71,6 +71,8 @@ public:
                         Graph g);
     int numRows(){return rows;};
     int numCols(){return cols;};
+    
+    
     Graph::vertex_descriptor getVertex(int i, int j){return vertices[i][j];};
     
     bool traverseDFSRecursive(Graph &g, Graph::vertex_descriptor v, Graph::vertex_descriptor goal, stack<Graph::vertex_descriptor> &path);

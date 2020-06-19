@@ -153,7 +153,9 @@ bool findPath::traverseDFSShortest(Graph &a_graph,
 			if (!a_graph[*vItr].visited)
 			{
 				//found = traverseDFSShortest(g, *vItr, end, path, tempStack);
+
 				found = traverseDFSShortest(a_graph, *vItr, a_goal, a_tempStack, a_path);
+
 				a_tempStack.pop();
 			}
 		}
@@ -169,7 +171,9 @@ bool findPath::findShortestPathDFS(Graph &a_graph,
 {
 	clearVisited(a_graph);
 	stack<Graph::vertex_descriptor> tempStack;
+
 	return traverseDFSShortest(a_graph, a_start, a_goal, tempStack, a_path);
+
 }
 
 // search using BFS

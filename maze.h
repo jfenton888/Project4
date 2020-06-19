@@ -20,6 +20,7 @@
 
 #include "d_except.h"
 #include "matrix.h"
+#include "findPath.h"
 
 #include <boost/graph/adjacency_list.hpp>
 #include "boostGraph.h"
@@ -31,7 +32,7 @@ using namespace std;
 struct MazeProperties
 {
 	bool value;
-	uGraph::vertex_descriptor vertex;
+	Graph::vertex_descriptor vertex;
 };
 
 
@@ -48,21 +49,23 @@ private:
 public:
 	maze(ifstream &fin); //constructor
 	
+	findPath solve;
+	
 	void print(int a_goalY, int a_goalX, int a_cY, int a_cX);
 	bool isLegal(int a_y, int a_x);
-	void mapMazeToGraph(uGraph &a_graph);
-	void printPath(uGraph a_graph,
-				   uGraph::vertex_descriptor a_end,
-				   stack<uGraph::vertex_descriptor> &a_stack);
+	void mapMazeToGraph(Graph &a_graph);
+	void printPath(Graph a_graph,
+				   Graph::vertex_descriptor a_end,
+				   stack<Graph::vertex_descriptor> &a_stack);
 	
 	int numRows(){return m_rows;};
 	int numCols(){return m_cols;};
 	
 	bool getValue(int a_row, int a_col) const {return m_maze[a_row][a_col].value;};
-	uGraph::vertex_descriptor getVertex(int a_row, int a_col) const {return m_maze[a_row][a_col].vertex;};
+	Graph::vertex_descriptor getVertex(int a_row, int a_col) const {return m_maze[a_row][a_col].vertex;};
 	
-	void printGraphProperties(uGraph &a_graph) const;
-	friend ostream& operator<<(ostream& cout, const uGraph &a_graph);
+	void printGraphProperties(Graph &a_graph) const;
+	friend ostream& operator<<(ostream& cout, const Graph &a_graph);
 	
 };
 

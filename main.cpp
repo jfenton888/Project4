@@ -15,8 +15,10 @@
 #include <algorithm>
 
 #include "heapV.h"
+#include "heapV.cpp"
 #include "maze.h"
 #include "findPath.h"
+#include "global.h"
 
 #include <boost/graph/adjacency_list.hpp>
 
@@ -28,18 +30,18 @@ using namespace std;
 
 #define LargeValue 99999999
 
-void clearVisited(uGraph &g);
+void clearVisited(Graph &g);
 // Mark all nodes in g as not visited.
 
-void setNodeWeights(uGraph &g, int w);
+void setNodeWeights(Graph &g, int w);
 // Set all node weights to w.
 
-void clearMarked(uGraph &g);
+void clearMarked(Graph &g);
 
 
-void initializeGraph(dGraph &g,
-					 dGraph::vertex_descriptor &start,
-					 dGraph::vertex_descriptor &end, ifstream &fin)
+void initializeGraph(Graph &g,
+					 Graph::vertex_descriptor &start,
+					 Graph::vertex_descriptor &end, ifstream &fin)
 // Initialize g using data from fin.  Set start and end equal
 // to the start and end nodes.
 {
@@ -49,7 +51,7 @@ void initializeGraph(dGraph &g,
 	int startId, endId;
 	fin >> n;
 	fin >> startId >> endId;
-	dGraph::vertex_descriptor v;
+	Graph::vertex_descriptor v;
 	
 	// Add nodes.
 	for (int i = 0; i < n; i++)
@@ -73,10 +75,10 @@ void initializeGraph(dGraph &g,
 
 
 
-void relax(uGraph &g, uGraph::vertex_descriptor u, uGraph::vertex_descriptor v)
+void relax(Graph &g, Graph::vertex_descriptor u, Graph::vertex_descriptor v)
 {
 	// get edge between u and v
-	pair<uGraph::edge_descriptor, bool> checkEdge = edge(u, v, g);
+	pair<Graph::edge_descriptor, bool> checkEdge = edge(u, v, g);
 	
 	// make sure the edge exists
 	if (checkEdge.second != true) {
@@ -91,10 +93,10 @@ void relax(uGraph &g, uGraph::vertex_descriptor u, uGraph::vertex_descriptor v)
 	}
 }
 
-bool dijkstra(dGraph &a_graph, dGraph::vertex_descriptor a_start)
+bool dijkstra(Graph &a_graph, Graph::vertex_descriptor a_start)
 {
-	//heapV<dGraph::vertex_descriptor, dGraph> queue;
-	//queue.minHeapInsert(a_start, a_graph);
+	heapV<Graph::vertex_descriptor, Graph> queue;
+	queue.minHeapInsert(a_start, a_graph);
 	
 //	while (queue.size()>0)
 //	{
@@ -106,30 +108,11 @@ bool dijkstra(dGraph &a_graph, dGraph::vertex_descriptor a_start)
 } // end of dijikstra
 
 
-bool bellmanFord(dGraph &g, dGraph::vertex_descriptor s)
+bool bellmanFord(Graph &g, Graph::vertex_descriptor s)
 {
 	return true;
 } // end bellmanFord
 
-
-template <typename T>
-void StackDebug(std::stack<T> s)
-{
-	std::vector<T> debugVector = std::vector<T>();
-	while (!s.empty( ) )
-	{
-		T t = s.top( );
-		debugVector.push_back(t);
-		s.pop( );
-	}
-	
-	// stack, read from top down, is reversed relative to its creation (from bot to top)
-	std::reverse(debugVector.begin(), debugVector.end());
-	for(const auto& it : debugVector)
-	{
-		std::cout << it << " ";
-	}
-}
 
 
 
@@ -149,30 +132,21 @@ int main()
 		exit(1);
 	}
 	
-	maze m(fin);
+	maze myMaze(fin);
 	fin.close();
 	
-	//m.print(m.numRows() - 1, m.numCols() - 1, 0, 0);
+	Graph graph;
+	myMaze.mapMazeToGraph(graph);
 	
+	stack<Graph::vertex_descriptor> bestPath;
 	
-	uGraph graph;
-	m.mapMazeToGraph(graph);
+	Graph::vertex_descriptor startNode, endNode;
+	startNode = myMaze.getVertex(0, 0);
+	endNode = myMaze.getVertex(myMaze.numRows() - 1, myMaze.numCols() - 1);
 	
-	//m.printGraphProperties(graph);
+	myMaze.solve.findShortestPathDFS(graph, startNode, endNode, bestPath);
 	
-	findPath solver;
-	stack<uGraph::vertex_descriptor> bestPath;
-	
-	uGraph::vertex_descriptor startGraph, endGraph;
-	
-	startGraph = m.getVertex(0, 0);
-	endGraph = m.getVertex(m.numRows() - 1, m.numCols() - 1);
-	
-	solver.findShortestPathDFS(graph, startGraph, endGraph, bestPath);
-	
-	StackDebug(bestPath);
-	
-	m.printPath(graph, endGraph, bestPath);
+	myMaze.printPath(graph, endNode, bestPath);
 	
 }
 

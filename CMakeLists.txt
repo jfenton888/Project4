@@ -15,7 +15,7 @@ if(Boost_FOUND)
 
 endif()
 
-add_executable(Project4 main.cpp boostGraph.h d_except.h heapV.cpp heapV.h initializeGraph.cpp initializeGraph.h matrix.cpp matrix.h maze.cpp maze.h findPath.cpp findPath.h)
+add_executable(Project4 main.cpp boostGraph.h d_except.h heapV.cpp heapV.h initializeGraph.cpp initializeGraph.h matrix.cpp matrix.h maze.cpp maze.h findPath.cpp findPath.h global.cpp global.h)
 
 
 if(Boost_FOUND)

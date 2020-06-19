@@ -13,32 +13,21 @@
 using namespace boost;
 using namespace std;
 
-struct DVertexProperties;
-struct UVertexProperties;
+struct VertexProperties;
 struct EdgeProperties;
 
-typedef adjacency_list<vecS, vecS, directedS, UVertexProperties, EdgeProperties> uGraph;
-
-typedef adjacency_list<vecS, vecS, directedS, DVertexProperties, EdgeProperties> dGraph;
+typedef adjacency_list<vecS, vecS, directedS, VertexProperties, EdgeProperties> Graph;
 
 
-struct DVertexProperties
+struct VertexProperties
 {
 	pair<int,int> cell; // maze cell (x,y) value
-	dGraph::vertex_descriptor pred; // predecessor node
+	Graph::vertex_descriptor pred; // predecessor node
 	int weight;
 	bool visited;
 	bool marked;
 };
 
-struct UVertexProperties
-{
-	pair<int,int> cell; // maze cell (x,y) value
-	uGraph::vertex_descriptor pred; // predecessor node
-	int weight;
-	bool visited;
-	bool marked;
-};
 
 // Create a struct to hold properties for each edge
 struct EdgeProperties

@@ -5,6 +5,8 @@
 // Project begun on 2020-06-12.
 //
 
+#include "maze.h"
+
 #include <iostream>
 #include <limits.h>
 #include <list>
@@ -13,9 +15,9 @@
 #include <vector>
 #include <stack>
 
-#include "maze.h"
 #include "d_except.h"
 #include "matrix.h"
+
 #include <boost/graph/adjacency_list.hpp>
 
 #include "boostGraph.h"
@@ -99,7 +101,7 @@ bool maze::isLegal(int a_y, int a_x)
 
 
 // create a graph g that represents the legal moves in the maze m
-void maze::mapMazeToGraph(uGraph &a_graph)
+void maze::mapMazeToGraph(Graph &a_graph)
 {
     for (int y = 0; y < m_rows; y++)
     {
@@ -108,7 +110,7 @@ void maze::mapMazeToGraph(uGraph &a_graph)
             
             if (isLegal(y, x))
             {
-                uGraph::vertex_descriptor v = add_vertex(a_graph);
+                Graph::vertex_descriptor v = add_vertex(a_graph);
                 a_graph[v].cell = pair<int, int>(y, x);
                 m_maze[y][x].vertex = v;
                 //vertices[y][x] = v;
@@ -125,14 +127,7 @@ void maze::mapMazeToGraph(uGraph &a_graph)
                     add_edge(m_maze[y][x - 1].vertex, v, a_graph);
                     add_edge(v, m_maze[y][x - 1].vertex, a_graph);
                 }
-//                if (y != m_rows-1 && m_maze[y + 1][x].value) {
-//                    cout<<"("<<x<<", "<<y<<") Down \n";
-//                    add_edge(m_maze[y + 1][x].vertex, v, a_graph);
-//                }
-//                if (x != m_cols-1 && m_maze[y][x + 1].value) {
-//                    cout<<"("<<x<<", "<<y<<") Right \n";
-//                    add_edge(m_maze[y][x + 1].vertex, v, a_graph);
-//                }
+
 
             }
         }
@@ -141,9 +136,9 @@ void maze::mapMazeToGraph(uGraph &a_graph)
 
 
 // prints the path represented by the vertices in stack s
-void maze::printPath(uGraph a_graph,
-                     uGraph::vertex_descriptor a_end,
-                     stack<uGraph::vertex_descriptor> &a_stack
+void maze::printPath(Graph a_graph,
+                     Graph::vertex_descriptor a_end,
+                     stack<Graph::vertex_descriptor> &a_stack
                      )
 {
     // initialize a pair to store values while iterating through the stack
@@ -163,13 +158,13 @@ void maze::printPath(uGraph a_graph,
 }
 
 
-void maze::printGraphProperties(uGraph &a_graph) const
+void maze::printGraphProperties(Graph &a_graph) const
 {
     //int numEdge = 0;
     
-    pair<uGraph::vertex_iterator, uGraph::vertex_iterator> vItrRange = vertices(a_graph);
+    pair<Graph::vertex_iterator, Graph::vertex_iterator> vItrRange = vertices(a_graph);
     
-    for (uGraph::vertex_iterator vItr = vItrRange.first; vItr != vItrRange.second; ++vItr)
+    for (Graph::vertex_iterator vItr = vItrRange.first; vItr != vItrRange.second; ++vItr)
     {
         cout << "Vertex: " << *vItr << endl;
         cout << "Cell: (" << a_graph[*vItr].cell.second << ", " <<
@@ -179,16 +174,16 @@ void maze::printGraphProperties(uGraph &a_graph) const
         cout << "Visited: " << a_graph[*vItr].visited << endl;
         cout << "Marked: " << a_graph[*vItr].marked << endl;
     
-        pair<uGraph::adjacency_iterator, uGraph::adjacency_iterator> vAdjItrRange = adjacent_vertices(*vItr, a_graph);
-        for (uGraph::adjacency_iterator vAdjItr= vAdjItrRange.first; vAdjItr != vAdjItrRange.second; ++vAdjItr)
+        pair<Graph::adjacency_iterator, Graph::adjacency_iterator> vAdjItrRange = adjacent_vertices(*vItr, a_graph);
+        for (Graph::adjacency_iterator vAdjItr= vAdjItrRange.first; vAdjItr != vAdjItrRange.second; ++vAdjItr)
             cout << "Adjacent to: "<<*vAdjItr<< " at (" << a_graph[*vAdjItr].cell.second << ", " <<
                                              a_graph[*vAdjItr].cell.first << ")" << endl;
         cout << endl;
     }
     
-    pair<uGraph::edge_iterator, uGraph::edge_iterator> eItrRange = edges(a_graph);
+    pair<Graph::edge_iterator, Graph::edge_iterator> eItrRange = edges(a_graph);
     
-    for (uGraph::edge_iterator eItr = eItrRange.first; eItr != eItrRange.second; ++eItr)
+    for (Graph::edge_iterator eItr = eItrRange.first; eItr != eItrRange.second; ++eItr)
     {
         //numEdge++;
         cout << "Edge: " << *eItr << endl;

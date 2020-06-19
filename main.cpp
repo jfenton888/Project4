@@ -93,8 +93,8 @@ void relax(uGraph &g, uGraph::vertex_descriptor u, uGraph::vertex_descriptor v)
 
 bool dijkstra(dGraph &a_graph, dGraph::vertex_descriptor a_start)
 {
-	heapV<dGraph::vertex_descriptor, dGraph> queue;
-	queue.minHeapInsert(a_start, a_graph);
+	//heapV<dGraph::vertex_descriptor, dGraph> queue;
+	//queue.minHeapInsert(a_start, a_graph);
 	
 //	while (queue.size()>0)
 //	{

@@ -20,6 +20,7 @@
 #include <iostream>
 #include <vector>
 
+#include "boostGraph.h"
 #include "d_except.h"
 
 using namespace std;

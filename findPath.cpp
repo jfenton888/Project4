@@ -21,12 +21,12 @@ using namespace std;
 
 
 // mark all nodes in g as not visited
-void findPath::clearVisited(Graph &a_graph)
+void findPath::clearVisited(uGraph &a_graph)
 {
 	// get a pair containing iterators pointing the beginning and end of the list of nodes
-	pair<Graph::vertex_iterator, Graph::vertex_iterator> vItrRange = vertices(a_graph);
+	pair<uGraph::vertex_iterator, uGraph::vertex_iterator> vItrRange = vertices(a_graph);
 	// loop over all nodes in the graph
-	for (Graph::vertex_iterator vItr = vItrRange.first; vItr != vItrRange.second; ++vItr)
+	for (uGraph::vertex_iterator vItr = vItrRange.first; vItr != vItrRange.second; ++vItr)
 	{
 		a_graph[*vItr].visited = false;
 	}
@@ -34,31 +34,31 @@ void findPath::clearVisited(Graph &a_graph)
 
 // set all node weights to w
 // edges, not verticies???????????????????
-void findPath::setNodeWeights(Graph &a_graph, int a_value)
+void findPath::setNodeWeights(uGraph &a_graph, int a_value)
 {
 	
-	pair<Graph::vertex_iterator, Graph::vertex_iterator> vItrRange = vertices(a_graph);
+	pair<uGraph::vertex_iterator, uGraph::vertex_iterator> vItrRange = vertices(a_graph);
 	// loop over all nodes in the graph
-	for (Graph::vertex_iterator vItr = vItrRange.first; vItr != vItrRange.second; ++vItr)
+	for (uGraph::vertex_iterator vItr = vItrRange.first; vItr != vItrRange.second; ++vItr)
 	{
 		a_graph[*vItr].weight = a_value;
 	}
 }
 
 // unmark all nodes
-void findPath::clearMarked(Graph &a_graph)
+void findPath::clearMarked(uGraph &a_graph)
 {
 	
-	pair<Graph::vertex_iterator, Graph::vertex_iterator> vItrRange = vertices(a_graph);
+	pair<uGraph::vertex_iterator, uGraph::vertex_iterator> vItrRange = vertices(a_graph);
 	// loop over all nodes in the graph
-	for (Graph::vertex_iterator vItr = vItrRange.first; vItr != vItrRange.second; ++vItr)
+	for (uGraph::vertex_iterator vItr = vItrRange.first; vItr != vItrRange.second; ++vItr)
 	{
 		a_graph[*vItr].marked = false;
 	}
 }
 
 // function to clear the stack
-void findPath::clearStack(stack<Graph::vertex_descriptor> &a_path)
+void findPath::clearStack(stack<uGraph::vertex_descriptor> &a_path)
 {
 	
 	while (!a_path.empty())
@@ -73,10 +73,10 @@ void findPath::clearStack(stack<Graph::vertex_descriptor> &a_path)
 
 
 // traverse function for recursive DFS
-bool findPath::traverseDFSRecursive(Graph &a_graph,
-						  Graph::vertex_descriptor a_vertex,
-						  Graph::vertex_descriptor a_goal,
-						  stack<Graph::vertex_descriptor> &a_path)
+bool findPath::traverseDFSRecursive(uGraph &a_graph,
+						  uGraph::vertex_descriptor a_vertex,
+						  uGraph::vertex_descriptor a_goal,
+						  stack<uGraph::vertex_descriptor> &a_path)
 {
 	// check to see if we are at the goal
 	
@@ -92,9 +92,9 @@ bool findPath::traverseDFSRecursive(Graph &a_graph,
 		a_graph[a_vertex].visited = true;
 		bool found = false;
 		
-		pair<Graph::adjacency_iterator, Graph::adjacency_iterator> vItrRange = adjacent_vertices(a_vertex, a_graph);
+		pair<uGraph::adjacency_iterator, uGraph::adjacency_iterator> vItrRange = adjacent_vertices(a_vertex, a_graph);
 		
-		for (Graph::adjacency_iterator vItr = vItrRange.first; vItr != vItrRange.second; ++vItr)
+		for (uGraph::adjacency_iterator vItr = vItrRange.first; vItr != vItrRange.second; ++vItr)
 		{
 			if (!a_graph[*vItr].visited) //if not yet visited, visit it
 				found = traverseDFSRecursive(a_graph, *vItr, a_goal, a_path);
@@ -111,10 +111,10 @@ bool findPath::traverseDFSRecursive(Graph &a_graph,
 }
 
 // recursive DFS
-bool findPath::findPathDFSRecursive(Graph& a_graph,
-						  Graph::vertex_descriptor a_start,
-						  Graph::vertex_descriptor a_goal,
-						  stack<Graph::vertex_descriptor>& a_path)
+bool findPath::findPathDFSRecursive(uGraph& a_graph,
+						  uGraph::vertex_descriptor a_start,
+						  uGraph::vertex_descriptor a_goal,
+						  stack<uGraph::vertex_descriptor>& a_path)
 {
 	clearVisited(a_graph);
 	
@@ -125,17 +125,17 @@ bool findPath::findPathDFSRecursive(Graph& a_graph,
 
 
 // DFS using stack, not recursion
-bool findPath::findPathDFSStack(Graph &a_graph,
-					  Graph::vertex_descriptor a_start,
-					  Graph::vertex_descriptor a_goal,
-					  stack<Graph::vertex_descriptor> &a_path)
+bool findPath::findPathDFSStack(uGraph &a_graph,
+					  uGraph::vertex_descriptor a_start,
+					  uGraph::vertex_descriptor a_goal,
+					  stack<uGraph::vertex_descriptor> &a_path)
 {
 	
 	clearVisited(a_graph);
 	bool found = false;
-	stack<Graph::vertex_descriptor> thisStack;
+	stack<uGraph::vertex_descriptor> thisStack;
 	thisStack.push(a_start);
-	Graph::vertex_descriptor currV;
+	uGraph::vertex_descriptor currV;
 	
 	while (!thisStack.empty() && !found)
 	{
@@ -148,9 +148,9 @@ bool findPath::findPathDFSStack(Graph &a_graph,
 			
 			a_graph[currV].visited = true;
 			
-			pair<Graph::adjacency_iterator, Graph::adjacency_iterator> vItrRange = adjacent_vertices(currV, a_graph);
+			pair<uGraph::adjacency_iterator, uGraph::adjacency_iterator> vItrRange = adjacent_vertices(currV, a_graph);
 			
-			for (Graph::adjacency_iterator vItr = vItrRange.first; vItr != vItrRange.second; ++vItr)
+			for (uGraph::adjacency_iterator vItr = vItrRange.first; vItr != vItrRange.second; ++vItr)
 			{
 				if (!a_graph[*vItr].visited)
 				{
@@ -176,11 +176,11 @@ bool findPath::findPathDFSStack(Graph &a_graph,
 
 
 // traverse function for shortest DFS
-bool findPath::traverseDFSShortest(Graph &a_graph,
-						 Graph::vertex_descriptor a_vertex,
-						 Graph::vertex_descriptor a_goal,
-						 stack<Graph::vertex_descriptor> &a_tempStack,
-						 stack<Graph::vertex_descriptor> &a_path)
+bool findPath::traverseDFSShortest(uGraph &a_graph,
+						 uGraph::vertex_descriptor a_vertex,
+						 uGraph::vertex_descriptor a_goal,
+						 stack<uGraph::vertex_descriptor> &a_tempStack,
+						 stack<uGraph::vertex_descriptor> &a_path)
 {
 	a_tempStack.push(a_vertex);
 	
@@ -197,9 +197,9 @@ bool findPath::traverseDFSShortest(Graph &a_graph,
 		a_graph[a_vertex].visited = true;
 		bool found = false;
 		
-		pair<Graph::adjacency_iterator, Graph::adjacency_iterator> vItrRange = adjacent_vertices(a_vertex, a_graph);
+		pair<uGraph::adjacency_iterator, uGraph::adjacency_iterator> vItrRange = adjacent_vertices(a_vertex, a_graph);
 		
-		for (Graph::adjacency_iterator vItr = vItrRange.first; vItr != vItrRange.second; ++vItr)
+		for (uGraph::adjacency_iterator vItr = vItrRange.first; vItr != vItrRange.second; ++vItr)
 		{
 			if (!a_graph[*vItr].visited)
 			{

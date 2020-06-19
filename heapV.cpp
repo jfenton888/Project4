@@ -8,6 +8,7 @@
 #include <iostream>
 #include <vector>
 
+#include "boostGraph.h"
 #include "d_except.h"
 #include "heapV.h"
 

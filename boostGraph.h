@@ -13,10 +13,11 @@
 using namespace boost;
 using namespace std;
 
-struct VertexProperties;
+struct DVertexProperties;
+struct UVertexProperties;
 struct EdgeProperties;
 
-typedef adjacency_list<vecS, vecS, undirectedS, DVertexProperties, EdgeProperties> uGraph;
+typedef adjacency_list<vecS, vecS, directedS, UVertexProperties, EdgeProperties> uGraph;
 
 typedef adjacency_list<vecS, vecS, directedS, DVertexProperties, EdgeProperties> dGraph;
 

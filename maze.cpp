@@ -114,13 +114,17 @@ void maze::mapMazeToGraph(uGraph &a_graph)
                 //vertices[y][x] = v;
                 a_graph[v].pred = 1;
                 if (y != 0 && m_maze[y - 1][x].value)
+                {
 //                    cout<<"("<<x<<", "<<y<<") Up \n";
                     add_edge(m_maze[y - 1][x].vertex, v, a_graph);
-                
+                    add_edge(v, m_maze[y - 1][x].vertex, a_graph);
+                }
                 if (x != 0 && m_maze[y][x - 1].value)
+                {
 //                    cout<<"("<<x<<", "<<y<<") Left \n";
                     add_edge(m_maze[y][x - 1].vertex, v, a_graph);
-                
+                    add_edge(v, m_maze[y][x - 1].vertex, a_graph);
+                }
 //                if (y != m_rows-1 && m_maze[y + 1][x].value) {
 //                    cout<<"("<<x<<", "<<y<<") Down \n";
 //                    add_edge(m_maze[y + 1][x].vertex, v, a_graph);

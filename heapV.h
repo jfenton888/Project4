@@ -29,21 +29,21 @@ template <typename T, typename U>
 class heapV
 {
 private:
-	vector<T> list;
+	vector<T> m_list;
 
 public:
 	heapV();
 	
-	void initializeMaxHeap(vector<T> list2, U &g);
-	void initializeMinHeap(vector<T> list2, U &g);
+	void initializeMaxHeap(vector<T> a_list, U &a_graph);
+	void initializeMinHeap(vector<T> a_list, U &a_graph);
 	
-	void maxHeapify(int i, int heapSize, U &g);
-	void buildMaxHeap(int heapSize, U &g);
+	void maxHeapify(int a_index, int a_heapSize, U &a_graph);
+	void buildMaxHeap(int a_heapSize, U &a_graph);
 	
-	void minHeapify(int i, int heapSize, U &g);
-	void buildMinHeap(int heapSize, U &g);
+	void minHeapify(int a_index, int a_heapSize, U &a_graph);
+	void buildMinHeap(int a_heapSize, U &a_graph);
 	
-	void heapsort(int heapSize, U &g);
+	void heapsort(int a_heapSize, U &a_graph);
 	
 	int parent(int i) {return (i+1)/2-1;}  // Given a node in a heap, return the index of the parent
 	// Map vertex indices from 0-based to 1-based and
@@ -51,21 +51,21 @@ public:
 	// Map vertex indices from 0-based to 1-based and back
 	int right(int i) {return 2*(i+1);}     // Given a node in a heap, return the right child
 	
-	T &getItem(int i) {return list[i];}      // Return a reference to the ith item in the heap
-	int getIndex(T &key);
-	int size() {return (int) list.size();}
+	T &getItem(int a_index) {return m_list[a_index];}      // Return a reference to the ith item in the heap
+	int getIndex(T &a_key);
+	int size() {return (int) m_list.size();}
 	
 	T getMaxHeapMaximum();
 	T getMinHeapMinimum();
 	
-	T extractMaxHeapMaximum(U &g);
-	T extractMinHeapMinimum(U &g);
+	T extractMaxHeapMaximum(U &a_graph);
+	T extractMinHeapMinimum(U &a_graph);
 	
-	void maxHeapIncreaseKey(int i, U &g);
-	void minHeapDecreaseKey(int i, U &g);
+	void maxHeapIncreaseKey(int a_index, U &a_graph);
+	void minHeapDecreaseKey(int a_index, U &a_graph);
 	
-	void maxHeapInsert(T key, U &g);
-	void minHeapInsert(T key, U &g);
+	void maxHeapInsert(T a_key, U &a_graph);
+	void minHeapInsert(T a_key, U &a_graph);
 	
 };
 

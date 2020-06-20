@@ -67,5 +67,20 @@ void clearStack(stack<Graph::vertex_descriptor> &a_path)
 
 
 
+void generateStack(Graph &a_graph,
+				   Graph::vertex_descriptor a_start,
+				   Graph::vertex_descriptor a_goal,
+				   stack<Graph::vertex_descriptor> &a_path)
+{
+	Graph::vertex_descriptor currV;
+	
+	currV = a_goal;
+	while (currV != a_start)
+	{
+		a_path.push(currV);
+		currV = a_graph[currV].pred;
+	}
+	a_path.push(a_start);
+}
 
 

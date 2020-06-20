@@ -25,6 +25,13 @@ void clearMarked(Graph &a_graph);
 
 void clearStack(stack<Graph::vertex_descriptor> &a_path);
 
+
+void generateStack(Graph &a_graph,
+				   Graph::vertex_descriptor a_start,
+				   Graph::vertex_descriptor a_goal,
+				   stack<Graph::vertex_descriptor> &a_path);
+
+
 template <typename T>
 void StackDebug(stack<T> s)
 {

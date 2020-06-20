@@ -108,15 +108,16 @@ void initializeSingleSource(Graph &a_graph, Graph::vertex_descriptor a_start)
 bool dijkstra(Graph &a_graph, Graph::vertex_descriptor a_start)
 {
 	heapV<Graph::vertex_descriptor, Graph> queue;
-	pair<Graph::vertex_iterator, Graph::vertex_iterator> vItrRange = vertices(a_graph);
 	Graph::vertex_descriptor currV;
 	
 	initializeSingleSource(a_graph, a_start);
 	
-	for (Graph::vertex_iterator vItr = vItrRange.first; vItr != vItrRange.second; ++vItr)
-		queue.minHeapInsert(*vItr, a_graph);
-	
 	clearVisited(a_graph);
+	clearMarked(a_graph);
+	
+	queue.minHeapInsert(a_start, a_graph);
+	a_graph[a_start].marked=true;
+	
 	while (queue.size()>0)
 	{
 		currV=queue.extractMinHeapMinimum(a_graph);
@@ -132,7 +133,14 @@ bool dijkstra(Graph &a_graph, Graph::vertex_descriptor a_start)
 			if(!a_graph[*vAdjItr].visited)
 			{
 				relax(a_graph, currV, *vAdjItr);
-				queue.minHeapDecreaseKey(*vAdjItr, a_graph);
+				
+				if(!a_graph[*vAdjItr].marked)
+				{
+					queue.minHeapInsert(*vAdjItr, a_graph);
+					a_graph[*vAdjItr].marked=true;
+				}
+				else
+					queue.minHeapDecreaseKey(*vAdjItr, a_graph);
 			}
 		}
 	}
@@ -172,27 +180,76 @@ bool bellmanFord(Graph &a_graph, Graph::vertex_descriptor a_start)
 } // end bellmanFord
 
 
-void generateStack(Graph &a_graph,
-				   Graph::vertex_descriptor a_start,
-				   Graph::vertex_descriptor a_goal,
-				   stack<Graph::vertex_descriptor> &a_path)
+bool wavefront(Graph &a_graph, Graph::vertex_descriptor a_start, Graph::vertex_descriptor a_goal)
 {
+	queue<Graph::vertex_descriptor> atEdge;
+	
+	clearVisited(a_graph);
+	setNodeWeights(a_graph, 0);
+	clearMarked(a_graph);
+	
+	a_graph[a_goal].weight=1;
+	a_graph[a_goal].marked=true;
+	atEdge.push(a_goal);
 	Graph::vertex_descriptor currV;
 	
-	currV = a_goal;
-	while (currV != a_start)
-	{
-		a_path.push(currV);
-		currV = a_graph[currV].pred;
-	}
-	a_path.push(a_start);
+	bool found;
 	
+	while(!atEdge.empty())
+	{
+		currV=atEdge.front();
+		atEdge.pop();
+		a_graph[currV].visited=true;
+		
+		//cout<<"adding from node at ("<<a_graph[currV].cell.first<<", " <<a_graph[currV].cell.second<<")\n";
+		
+		pair<Graph::adjacency_iterator, Graph::adjacency_iterator> vItrRange = adjacent_vertices(currV, a_graph);
+		for (Graph::adjacency_iterator vItr = vItrRange.first; vItr != vItrRange.second; ++vItr)
+		{
+			if (!a_graph[*vItr].marked)
+			{
+				a_graph[*vItr].marked = true;
+				a_graph[*vItr].weight = a_graph[currV].weight + 1;
+				atEdge.push(*vItr);
+				
+				if (*vItr==a_start)
+					found=true;
+			}
+		}
+	}
+	
+	if(!found)
+		return false;
+	
+	
+	currV=a_start;
+	int minCost=a_graph[currV].weight;
+	while(currV!=a_goal)
+	{
+		//cout<<"Backtracking from node at ("<<a_graph[currV].cell.first<<", " <<a_graph[currV].cell.second<<") with cost "<<a_graph[currV].weight<<endl;
+		
+		pair<Graph::adjacency_iterator, Graph::adjacency_iterator> vItrRange = adjacent_vertices(currV, a_graph);
+		for (Graph::adjacency_iterator vItr = vItrRange.first; vItr != vItrRange.second; ++vItr)
+		{
+			if(a_graph[*vItr].weight<minCost)
+			{
+				minCost=a_graph[*vItr].weight;
+				a_graph[*vItr].pred=currV;
+				currV=*vItr;
+				break;
+			}
+		}
+	}
+	return true;
+
 }
+
+
 
 
 int main()
 {
-
+/*
 	ifstream fin;
 	
 	// Read the maze from the file.
@@ -213,16 +270,25 @@ int main()
 	
 	stack<Graph::vertex_descriptor> bestPath;
 	
-	Graph::vertex_descriptor startNode, endNode;
+	Graph::vertex_descriptor startNode, goalNode;
 	startNode = myMaze.getVertex(0, 0);
-	endNode = myMaze.getVertex(myMaze.numRows() - 1, myMaze.numCols() - 1);
+	goalNode = myMaze.getVertex(myMaze.numRows() - 1, myMaze.numCols() - 1);
 	
-	myMaze.solve.findShortestPathDFS(graph, startNode, endNode, bestPath);
 	
-	myMaze.printPath(graph, endNode, bestPath);
+	if (!wavefront(graph, startNode, goalNode))
+	{
+		cout << "Cannot find path \n";
+		return 0;
+	}
+	
+	generateStack(graph, startNode, goalNode, bestPath);
+	
+	//myMaze.solve.findShortestPathDFS(graph, startNode, goalNode, bestPath);
+	
+	myMaze.printPath(graph, goalNode, bestPath);
 
+*/
 
-/*
 	Graph graph;
 	Graph::vertex_descriptor startNode, goalNode;
 	stack<Graph::vertex_descriptor> bestPath;
@@ -238,8 +304,9 @@ int main()
 		cerr << "Cannot open " << fileName << endl;
 		exit(1);
 	}
-	initializeGraph(graph, startNode, goalNode, fin);
 	
+	
+	initializeGraph(graph, startNode, goalNode, fin);
 	
 	if(dijkstra(graph, startNode))
 	{
@@ -247,7 +314,7 @@ int main()
 		
 		StackDebug(bestPath);
 	}
-*/
+
 
 }
 

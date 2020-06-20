@@ -181,11 +181,10 @@ bool findPath::findShortestPathDFS(Graph &a_graph,
 
 	clearVisited(a_graph);
 	
-	for(int depth; depth<num_vertices(a_graph);depth++)
-	{
+	for(int depth=1; depth<num_vertices(a_graph);depth++)
 		if(findPathDFSRecursive(a_graph,a_start,a_goal,a_path,depth))
 			return true;
-	}
+		
 	return false;
 
 

@@ -25,11 +25,15 @@ using namespace std;
 bool findPath::traverseDFSRecursive(Graph &a_graph,
 						  Graph::vertex_descriptor a_vertex,
 						  Graph::vertex_descriptor a_goal,
-						  stack<Graph::vertex_descriptor> &a_path)
+						  stack<Graph::vertex_descriptor> &a_path,
+						  int a_remainingDepth)
 {
 	// check to see if we are at the goal
 	
-	cout<<"("<<a_graph[a_vertex].cell.second<<", "<<a_graph[a_vertex].cell.first<<") \n";
+	//cout<<"("<<a_graph[a_vertex].cell.second<<", "<<a_graph[a_vertex].cell.first<<") \n";
+	
+	if (a_remainingDepth<=0)
+		return false;
 	
 	if (a_vertex == a_goal)
 	{
@@ -46,7 +50,7 @@ bool findPath::traverseDFSRecursive(Graph &a_graph,
 		for (Graph::adjacency_iterator vItr = vItrRange.first; vItr != vItrRange.second; ++vItr)
 		{
 			if (!a_graph[*vItr].visited) //if not yet visited, visit it
-				found = traverseDFSRecursive(a_graph, *vItr, a_goal, a_path);
+				found = traverseDFSRecursive(a_graph, *vItr, a_goal, a_path, --a_remainingDepth);
 			if (found)
 				break;
 		}
@@ -63,11 +67,12 @@ bool findPath::traverseDFSRecursive(Graph &a_graph,
 bool findPath::findPathDFSRecursive(Graph& a_graph,
 						  Graph::vertex_descriptor a_start,
 						  Graph::vertex_descriptor a_goal,
-						  stack<Graph::vertex_descriptor>& a_path)
+						  stack<Graph::vertex_descriptor>& a_path,
+						  int a_maxDepth)
 {
 	clearVisited(a_graph);
 	
-	return traverseDFSRecursive(a_graph, a_start, a_goal, a_path);
+	return traverseDFSRecursive(a_graph, a_start, a_goal, a_path, a_maxDepth);
 }
 
 
@@ -169,10 +174,20 @@ bool findPath::findShortestPathDFS(Graph &a_graph,
 						 Graph::vertex_descriptor a_goal,
 						 stack<Graph::vertex_descriptor> &a_path)
 {
-	clearVisited(a_graph);
-	stack<Graph::vertex_descriptor> tempStack;
+//	clearVisited(a_graph);
+//	stack<Graph::vertex_descriptor> tempStack;
+//
+//	return traverseDFSShortest(a_graph, a_start, a_goal, tempStack, a_path);
 
-	return traverseDFSShortest(a_graph, a_start, a_goal, tempStack, a_path);
+	clearVisited(a_graph);
+	
+	for(int depth; depth<num_vertices(a_graph);depth++)
+	{
+		if(findPathDFSRecursive(a_graph,a_start,a_goal,a_path,depth))
+			return true;
+	}
+	return false;
+
 
 }
 

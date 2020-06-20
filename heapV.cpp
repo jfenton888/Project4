@@ -8,10 +8,13 @@
 #include <iostream>
 #include <vector>
 
+#include <boost/graph/adjacency_list.hpp>
+
 #include "boostGraph.h"
 #include "d_except.h"
 #include "heapV.h"
 
+using namespace boost;
 
 template <typename T, typename U>
 heapV<T,U>::heapV()
@@ -249,3 +252,7 @@ ostream &operator<<(ostream &ostr, heapV<T,U> &a_heap)
 	
 	return ostr;
 }
+
+
+//void overrideLinkError()
+//{ heapV<Graph::vertex_descriptor, Graph> queue;}

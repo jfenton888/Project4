@@ -192,7 +192,7 @@ void generateStack(Graph &a_graph,
 
 int main()
 {
-/*
+
 	ifstream fin;
 	
 	// Read the maze from the file.
@@ -220,9 +220,9 @@ int main()
 	myMaze.solve.findShortestPathDFS(graph, startNode, endNode, bestPath);
 	
 	myMaze.printPath(graph, endNode, bestPath);
-*/
 
 
+/*
 	Graph graph;
 	Graph::vertex_descriptor startNode, goalNode;
 	stack<Graph::vertex_descriptor> bestPath;
@@ -230,7 +230,7 @@ int main()
 	ifstream fin;
 	
 	// Read the maze from the file.
-	string fileName = "graph/graph2.txt";
+	string fileName = "graph/graph1.txt";
 	
 	fin.open(fileName.c_str());
 	if (!fin)
@@ -247,6 +247,7 @@ int main()
 		
 		StackDebug(bestPath);
 	}
+*/
 
 }
 

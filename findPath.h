@@ -15,6 +15,8 @@
 
 using namespace boost;
 
+#define LargeValue 99999999
+
 class findPath
 {
 
@@ -24,12 +26,14 @@ public:
 	bool traverseDFSRecursive(Graph &a_graph,
 							  Graph::vertex_descriptor a_vertex,
 							  Graph::vertex_descriptor a_goal,
-							  stack<Graph::vertex_descriptor> &a_path);
+							  stack<Graph::vertex_descriptor> &a_path,
+							  int a_remainingDepth);
 	
 	bool findPathDFSRecursive(Graph& a_graph,
 							  Graph::vertex_descriptor a_start,
 							  Graph::vertex_descriptor a_goal,
-							  stack<Graph::vertex_descriptor>& a_path);
+							  stack<Graph::vertex_descriptor>& a_path,
+							  int a_maxDepth=LargeValue);
 	
 	bool findPathDFSStack(Graph &a_graph,
 						  Graph::vertex_descriptor a_start,

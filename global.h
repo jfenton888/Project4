@@ -39,6 +39,39 @@ void relax(Graph &a_graph,
 void initializeSingleSource(Graph &a_graph, Graph::vertex_descriptor a_start);
 
 
+
+//class can be used to find the heuristic cost from any node the goal node,
+//whose vertex is given in constructor
+//3 member functions provide different types of distance calculations, based on ability to move in grid
+//for an object, h, of this class, the distance to the goal from vertex can be found by calling h.ManDist(graph, vertex)
+class heuristicCost
+{
+private:
+	double m_goalY;
+	double m_goalX;
+public:
+	heuristicCost(Graph &a_graph, Graph::vertex_descriptor a_goal): m_goalY(a_graph[a_goal].cell.first),
+																	m_goalX(a_graph[a_goal].cell.second){};
+	
+	//Manhattan distance, where movement is only possible in 4 directions
+	double ManDist(Graph &a_graph, Graph::vertex_descriptor a_currV)
+	{
+		return (abs(m_goalY-a_graph[a_currV].cell.first) + abs(m_goalX-a_graph[a_currV].cell.second));
+	}
+	//Diagonal distance, where movement is possible in 8 directions
+	double DiagDist(Graph &a_graph, Graph::vertex_descriptor a_currV)
+	{
+		return (min(abs(m_goalY-a_graph[a_currV].cell.first), abs(m_goalX-a_graph[a_currV].cell.second)));
+	}
+	//Euclidean distance, where direction of movement is free
+	double EuclidDist(Graph &a_graph, Graph::vertex_descriptor a_currV)
+	{
+		return (sqrt(pow(m_goalY - a_graph[a_currV].cell.first, 2) + pow(m_goalX - a_graph[a_currV].cell.second, 2)));
+	}
+};
+
+
+
 template <typename T>
 void StackDebug(stack<T> s)
 {

@@ -92,7 +92,6 @@ void relax(Graph &a_graph,
 void initializeSingleSource(Graph &a_graph, Graph::vertex_descriptor a_start)
 {
 	pair<Graph::vertex_iterator, Graph::vertex_iterator> vItrRange = vertices(a_graph);
-	
 	for (Graph::vertex_iterator vItr = vItrRange.first; vItr != vItrRange.second; ++vItr)
 	{
 		a_graph[*vItr].weight=LargeValue;

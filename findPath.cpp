@@ -157,8 +157,6 @@ bool findPath::traverseDFSShortest(Graph &a_graph,
 		{
 			if (!a_graph[*vItr].visited)
 			{
-				//found = traverseDFSShortest(g, *vItr, end, path, tempStack);
-
 				found = traverseDFSShortest(a_graph, *vItr, a_goal, a_tempStack, a_path);
 
 				a_tempStack.pop();

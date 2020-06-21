@@ -17,6 +17,7 @@
 
 #include "d_except.h"
 #include "matrix.h"
+#include "global.h"
 
 #include <boost/graph/adjacency_list.hpp>
 
@@ -103,6 +104,8 @@ bool maze::isLegal(int a_y, int a_x)
 // create a graph g that represents the legal moves in the maze m
 void maze::mapMazeToGraph(Graph &a_graph)
 {
+	EdgeProperties edge;
+	edge.weight=1;
     for (int y = 0; y < m_rows; y++)
     {
         for (int x = 0; x < m_cols; x++)
@@ -118,14 +121,15 @@ void maze::mapMazeToGraph(Graph &a_graph)
                 if (y != 0 && m_maze[y - 1][x].value)
                 {
 //                    cout<<"("<<x<<", "<<y<<") Up \n";
-                    add_edge(m_maze[y - 1][x].vertex, v, a_graph);
-                    add_edge(v, m_maze[y - 1][x].vertex, a_graph);
+                    add_edge(m_maze[y - 1][x].vertex, v, edge, a_graph);
+                    add_edge(v, m_maze[y - 1][x].vertex, edge, a_graph);
+                    
                 }
                 if (x != 0 && m_maze[y][x - 1].value)
                 {
 //                    cout<<"("<<x<<", "<<y<<") Left \n";
-                    add_edge(m_maze[y][x - 1].vertex, v, a_graph);
-                    add_edge(v, m_maze[y][x - 1].vertex, a_graph);
+                    add_edge(m_maze[y][x - 1].vertex, v, edge, a_graph);
+                    add_edge(v, m_maze[y][x - 1].vertex, edge, a_graph);
                 }
 
 
@@ -137,14 +141,14 @@ void maze::mapMazeToGraph(Graph &a_graph)
 
 // prints the path represented by the vertices in stack s
 void maze::printPath(Graph a_graph,
-                     Graph::vertex_descriptor a_end,
+                     Graph::vertex_descriptor a_goal,
                      stack<Graph::vertex_descriptor> &a_stack
                      )
 {
     // initialize a pair to store values while iterating through the stack
     pair<int,int> curr;
     // get the end of the matrix
-    pair<int,int> goal = a_graph[a_end].cell;
+    pair<int,int> goal = a_graph[a_goal].cell;
     
     if (a_stack.empty()) {
         cout << "The stack is empty - could not find a solution!" << endl;
@@ -197,6 +201,61 @@ void maze::printGraphProperties(Graph &a_graph) const
     
     
 }
+
+
+// print out a maze, with the goal and current cells marked on the board.
+void maze::showPath(Graph a_graph,
+                    Graph::vertex_descriptor a_start,
+                    Graph::vertex_descriptor a_goal,
+                    stack<Graph::vertex_descriptor> &a_stack)
+{
+    Graph::vertex_descriptor currV;
+    
+    clearMarked(a_graph);
+    
+    while(!a_stack.empty())
+    {
+        currV = a_stack.top();
+        a_graph[currV].marked=true;
+        a_stack.pop();
+    }
+    
+    cout << endl;
+    for (int y = 0; y < m_rows; y++)
+    {
+        for (int x = 0; x < m_cols; x++)
+        {
+        	
+            if(m_maze[y][x].value) //if (m_boolMaze[y][x])
+            {
+                currV = m_maze[y][x].vertex;
+	
+				if(currV==a_start)
+					cout<<"+";
+				else if(currV==a_goal)
+					cout<<"*";
+                else if(a_graph[currV].marked)
+                {
+                    if(a_graph[a_graph[currV].pred].cell.first==y && a_graph[a_graph[currV].pred].cell.second==x-1)
+                        cout<<">";
+                    else if(a_graph[a_graph[currV].pred].cell.first==y && a_graph[a_graph[currV].pred].cell.second==x+1)
+                        cout<<"<";
+                    else if(a_graph[a_graph[currV].pred].cell.first==y+1 && a_graph[a_graph[currV].pred].cell.second==x)
+                        cout<<"^";
+                    else
+                        cout<<"v";
+                }
+                else
+                    cout << " ";
+            }
+            else
+                cout << "▓";
+        }
+        cout << endl;
+    }
+    cout << endl;
+}
+
 
 
 

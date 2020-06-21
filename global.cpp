@@ -17,6 +17,8 @@
 using namespace boost;
 using namespace std;
 
+#define LargeValue 99999999
+
 // mark all nodes in g as not visited
 void clearVisited(Graph &a_graph)
 {
@@ -66,6 +68,39 @@ void clearStack(stack<Graph::vertex_descriptor> &a_path)
 }
 
 
+void relax(Graph &a_graph,
+		   Graph::vertex_descriptor a_source,
+		   Graph::vertex_descriptor a_target)
+{
+	// get edge between u and v
+	pair<Graph::edge_descriptor, bool> checkEdge = edge(a_source, a_target, a_graph);
+	
+	// make sure the edge exists
+	if (checkEdge.second != true) {
+		cout << "The edge does not exist!" << endl;
+	}
+	
+	// relax
+	if (a_graph[a_target].weight > a_graph[a_source].weight + a_graph[checkEdge.first].weight)
+	{
+		a_graph[a_target].weight = a_graph[a_source].weight + a_graph[checkEdge.first].weight;
+		a_graph[a_target].pred = a_source;
+	}
+}
+
+
+void initializeSingleSource(Graph &a_graph, Graph::vertex_descriptor a_start)
+{
+	pair<Graph::vertex_iterator, Graph::vertex_iterator> vItrRange = vertices(a_graph);
+	
+	for (Graph::vertex_iterator vItr = vItrRange.first; vItr != vItrRange.second; ++vItr)
+	{
+		a_graph[*vItr].weight=LargeValue;
+		//a_graph[*vItr].pred= NIL; //need to figure out the null pointer for this
+	}
+	a_graph[a_start].weight=0;
+}
+
 
 void generateStack(Graph &a_graph,
 				   Graph::vertex_descriptor a_start,
@@ -75,8 +110,10 @@ void generateStack(Graph &a_graph,
 	Graph::vertex_descriptor currV;
 	
 	currV = a_goal;
+	
 	while (currV != a_start)
 	{
+		
 		a_path.push(currV);
 		currV = a_graph[currV].pred;
 	}

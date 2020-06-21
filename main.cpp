@@ -17,7 +17,6 @@
 #include "heapV.h"
 #include "heapV.cpp"
 #include "maze.h"
-#include "findPath.h"
 #include "global.h"
 
 #include <boost/graph/adjacency_list.hpp>
@@ -70,39 +69,6 @@ void initializeGraph(
 
 
 
-void relax(Graph &a_graph,
-		   Graph::vertex_descriptor a_source,
-		   Graph::vertex_descriptor a_target)
-{
-	// get edge between u and v
-	pair<Graph::edge_descriptor, bool> checkEdge = edge(a_source, a_target, a_graph);
-	
-	// make sure the edge exists
-	if (checkEdge.second != true) {
-		cout << "The edge does not exist!" << endl;
-	}
-	
-	// relax
-	if (a_graph[a_target].weight > a_graph[a_source].weight + a_graph[checkEdge.first].weight)
-	{
-		a_graph[a_target].weight = a_graph[a_source].weight + a_graph[checkEdge.first].weight;
-		a_graph[a_target].pred = a_source;
-	}
-}
-
-
-
-void initializeSingleSource(Graph &a_graph, Graph::vertex_descriptor a_start)
-{
-	pair<Graph::vertex_iterator, Graph::vertex_iterator> vItrRange = vertices(a_graph);
-	
-	for (Graph::vertex_iterator vItr = vItrRange.first; vItr != vItrRange.second; ++vItr)
-	{
-		a_graph[*vItr].weight=LargeValue;
-		//a_graph[*vItr].pred= NIL; //need to figure out the null pointer for this
-	}
-	a_graph[a_start].weight=0;
-}
 
 
 bool dijkstra(Graph &a_graph, Graph::vertex_descriptor a_start)
@@ -113,6 +79,7 @@ bool dijkstra(Graph &a_graph, Graph::vertex_descriptor a_start)
 	initializeSingleSource(a_graph, a_start);
 	
 	clearVisited(a_graph);
+	
 	clearMarked(a_graph);
 	
 	queue.minHeapInsert(a_start, a_graph);
@@ -144,7 +111,6 @@ bool dijkstra(Graph &a_graph, Graph::vertex_descriptor a_start)
 			}
 		}
 	}
-	
 	
 	return true;
 } // end of dijikstra
@@ -246,14 +212,112 @@ bool wavefront(Graph &a_graph, Graph::vertex_descriptor a_start, Graph::vertex_d
 
 
 
+class heuristicCost
+{
+private:
+	double m_goalY;
+	double m_goalX;
+public:
+	heuristicCost(Graph &a_graph, Graph::vertex_descriptor a_goal): m_goalY(a_graph[a_goal].cell.first),
+																   m_goalX(a_graph[a_goal].cell.second){};
+	
+	double ManDist(Graph &a_graph, Graph::vertex_descriptor a_currV)
+	{
+		return (abs(m_goalY-a_graph[a_currV].cell.first) + abs(m_goalX-a_graph[a_currV].cell.second));
+	}
+	double DiagDist(Graph &a_graph, Graph::vertex_descriptor a_currV)
+	{
+		return (min(abs(m_goalY-a_graph[a_currV].cell.first), abs(m_goalX-a_graph[a_currV].cell.second)));
+	}
+	double EuclidDist(Graph &a_graph, Graph::vertex_descriptor a_currV)
+	{
+		return (sqrt(pow(m_goalY - a_graph[a_currV].cell.first, 2) + pow(m_goalX - a_graph[a_currV].cell.second, 2)));
+	}
+	
+};
+
+
+
+
+
+bool A_star(Graph &a_graph, Graph::vertex_descriptor a_start, Graph::vertex_descriptor a_goal)
+{
+	heapV<Graph::vertex_descriptor, Graph> queue;
+	heuristicCost h(a_graph, a_goal);
+	Graph::vertex_descriptor currV;
+	int gCurr=0, gAdj=0;
+	
+	initializeSingleSource(a_graph, a_start);
+	
+	clearVisited(a_graph);
+	clearMarked(a_graph);
+	
+	queue.minHeapInsert(a_start, a_graph);
+	a_graph[a_start].marked=true;
+	
+	while (queue.size()>0)
+	{
+		currV=queue.extractMinHeapMinimum(a_graph);
+		a_graph[currV].visited=true;
+		if(currV!=a_start)
+			gCurr = a_graph[currV].weight-h.ManDist(a_graph,currV);
+		
+		if(currV==a_goal)
+			return true;
+		
+		pair<Graph::adjacency_iterator, Graph::adjacency_iterator> vAdjItrRange = adjacent_vertices(currV, a_graph);
+		for (Graph::adjacency_iterator vAdjItr= vAdjItrRange.first; vAdjItr != vAdjItrRange.second; ++vAdjItr)
+		{
+			if(!a_graph[*vAdjItr].visited)
+			{
+				
+				pair<Graph::edge_descriptor, bool> checkEdge = edge(currV, *vAdjItr, a_graph);
+				
+				gAdj = a_graph[*vAdjItr].weight-h.ManDist(a_graph,*vAdjItr);
+				
+				
+				if (gAdj > gCurr + a_graph[checkEdge.first].weight)
+				{
+					gAdj = gCurr + a_graph[checkEdge.first].weight;
+					a_graph[*vAdjItr].weight = gAdj + h.ManDist(a_graph, *vAdjItr);
+					
+					a_graph[*vAdjItr].pred = currV;
+				}
+				
+				if(!a_graph[*vAdjItr].marked)
+				{
+					queue.minHeapInsert(*vAdjItr, a_graph);
+					a_graph[*vAdjItr].marked=true;
+				}
+				else
+					queue.minHeapDecreaseKey(*vAdjItr, a_graph);
+			}
+		}
+	}
+	
+	
+	return false;
+} // end of A*
+
+
+
+
+
+
+
+
+
+
+
 
 int main()
 {
-/*
+	
+
 	ifstream fin;
 	
 	// Read the maze from the file.
-	string fileName = "maze-files/maze13.txt";
+	string fileName = "maze-files/maze14.txt";
 	
 	fin.open(fileName.c_str());
 	if (!fin)
@@ -275,20 +339,21 @@ int main()
 	goalNode = myMaze.getVertex(myMaze.numRows() - 1, myMaze.numCols() - 1);
 	
 	
-	if (!wavefront(graph, startNode, goalNode))
+	if (!A_star(graph, startNode, goalNode))
 	{
 		cout << "Cannot find path \n";
 		return 0;
 	}
+	else
+		generateStack(graph, startNode, goalNode, bestPath);
 	
-	generateStack(graph, startNode, goalNode, bestPath);
+	//myMaze.solve.findPathDFSRecursive(graph, startNode, goalNode, bestPath);
 	
-	//myMaze.solve.findShortestPathDFS(graph, startNode, goalNode, bestPath);
-	
-	myMaze.printPath(graph, goalNode, bestPath);
+	//myMaze.printPath(graph, goalNode, bestPath);
 
-*/
+	myMaze.showPath(graph, startNode, goalNode, bestPath);
 
+/*
 	Graph graph;
 	Graph::vertex_descriptor startNode, goalNode;
 	stack<Graph::vertex_descriptor> bestPath;
@@ -314,10 +379,8 @@ int main()
 		
 		StackDebug(bestPath);
 	}
-
-
+*/
+	
 }
-
-
 
 

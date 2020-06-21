@@ -21,11 +21,11 @@ typedef adjacency_list<vecS, vecS, directedS, VertexProperties, EdgeProperties> 
 
 struct VertexProperties
 {
-	pair<int,int> cell; // maze cell (x,y) value
+	pair<int,int> cell; // maze cell (y,x) value
 	Graph::vertex_descriptor pred; // predecessor node
 	int weight;
 	bool visited;
-	bool marked;
+	bool marked; //used for denoting if already queued
 };
 
 

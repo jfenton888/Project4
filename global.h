@@ -32,6 +32,13 @@ void generateStack(Graph &a_graph,
 				   stack<Graph::vertex_descriptor> &a_path);
 
 
+void relax(Graph &a_graph,
+		   Graph::vertex_descriptor a_source,
+		   Graph::vertex_descriptor a_target);
+
+void initializeSingleSource(Graph &a_graph, Graph::vertex_descriptor a_start);
+
+
 template <typename T>
 void StackDebug(stack<T> s)
 {

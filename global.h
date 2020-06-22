@@ -38,7 +38,7 @@ void relax(Graph &a_graph,
 
 void initializeSingleSource(Graph &a_graph, Graph::vertex_descriptor a_start);
 
-
+int isInt(string a_prompt, int a_min, int a_max);
 
 //class can be used to find the heuristic cost from any node the goal node,
 //whose vertex is given in constructor
@@ -73,14 +73,14 @@ public:
 
 
 template <typename T>
-void StackDebug(stack<T> s)
+void StackDebug(stack<T> a_stack)
 {
 	vector<T> debugVector = vector<T>();
-	while (!s.empty( ) )
+	while (!a_stack.empty())
 	{
-		T t = s.top( );
-		debugVector.push_back(t);
-		s.pop( );
+		T top = a_stack.top();
+		debugVector.push_back(top);
+		a_stack.pop();
 	}
 	
 	// stack, read from top down, is reversed relative to its creation (from bot to top)
@@ -91,6 +91,26 @@ void StackDebug(stack<T> s)
 	}
 }
 
+template <typename T>
+void PrintStack(stack<T> a_stack)
+{
+	T top;
+	if (!a_stack.empty())
+	{
+		top = a_stack.top();
+		cout << top;
+		a_stack.pop();
+		
+		while (!a_stack.empty())
+		{
+			top = a_stack.top();
+			cout << " -> " << top;
+			a_stack.pop();
+			
+		}
+		cout << endl;
+	}
+}
 
 
 #endif //PROJECT4_GLOBAL_H

@@ -313,112 +313,110 @@ bool A_star(Graph &a_graph, Graph::vertex_descriptor a_start, Graph::vertex_desc
 
 int main()
 {
-	int num = 0;
-	cout << "Maze File Algorthims: " << endl;
-	cout << "1. Depth First Search Recursive" << endl; 
-	cout << "2. Depth First Search stack" << endl;
-	cout << "3. Shortest Path Depth First Search" << endl;
-	cout << "4. Shortest Path Breadth First Search" << endl;
-	cout << "5. Wavefront Algorithm" << endl;
-	cout << "6. A* algorithm " << endl;
-	cout << "Graph File Algorithms" << endl;
-	cout << "7. Dijkstra's Algorithm" << endl;
-	cout << "8. BellmanFord Algorithm" << endl; 
-	cin >> num;
-
+	string mazeFile = "maze-files/maze1.txt";
+	string graphFile = "graph/graph1.txt";
 	
-	if (num < 7) {
-		ifstream fin;
+	int num = 0;
+	string prompt = "\nMaze File Algorthims: \n"
+				 	"  1. Depth First Search Recursive \n"
+	  				"  2. Depth First Search stack \n"
+	   				"  3. Shortest Path Depth First Search \n"
+					"  4. Shortest Path Breadth First Search \n"
+	 				"  5. Wavefront Algorithm \n"
+	  				"  6. A* algorithm \n"
+	   				"Graph File Algorithms: \n"
+					"  7. Dijkstra's Algorithm \n"
+	 				"  8. BellmanFord Algorithm \n";
+	num = isInt(prompt, 1, 8);
+	
+	Graph graph;
+	Graph::vertex_descriptor startNode, goalNode;
+	stack<Graph::vertex_descriptor> bestPath;
+	
+	ifstream fin;
+	
+	if (num < 7) //Picked a Maze Solver
+	{
 		// Read the maze from the file.
-		string fileName = "maze-files/maze1.txt";
-
-		fin.open(fileName.c_str());
+		fin.open(mazeFile.c_str());
 		if (!fin)
 		{
-			cerr << "Cannot open " << fileName << endl;
+			cerr << "Cannot open " << mazeFile << endl;
 			exit(1);
 		}
 
 		maze myMaze(fin);
 		fin.close();
-
-		Graph graph;
+		
 		myMaze.mapMazeToGraph(graph);
-
-		stack<Graph::vertex_descriptor> bestPath;
-
-		Graph::vertex_descriptor startNode, goalNode;
+		
 		startNode = myMaze.getVertex(0, 0);
 		goalNode = myMaze.getVertex(myMaze.numRows() - 1, myMaze.numCols() - 1);
-
-		if (num == 1) {
-			myMaze.solve.findPathDFSRecursive(graph, startNode, goalNode, bestPath);
+		
+		switch(num)
+		{
+			case 1: //Depth First with Recursion
+				myMaze.solve.findPathDFSRecursive(graph, startNode, goalNode, bestPath);
+				break;
+			case 2: //Depth First with Stack
+				myMaze.solve.findPathDFSStack(graph, startNode, goalNode, bestPath);
+				break;
+			case 3: //Iterative Depth First
+				myMaze.solve.findShortestPathDFS(graph, startNode, goalNode, bestPath);
+				break;
+			case 4: //Breadth First
+				myMaze.solve.findShortestPathBFS(graph, startNode, goalNode, bestPath);
+				break;
+			case 5: //Wavefront
+				wavefront(graph, startNode, goalNode);
+				break;
+			case 6: //A*
+				if (!A_star(graph, startNode, goalNode))
+				{
+					cout << "Cannot find path \n";
+					return 0;
+				}
+				else
+					generateStack(graph, startNode, goalNode, bestPath);
 		}
-
-		if (num == 2) {
-			myMaze.solve.findPathDFSStack(graph, startNode, goalNode, bestPath);
-		}
-
-		if (num == 3) {
-			myMaze.solve.findShortestPathDFS(graph, startNode, goalNode, bestPath);
-		}
-
-		if (num == 4) {
-			myMaze.solve.findShortestPathBFS(graph, startNode, goalNode, bestPath);
-		}
-
-		if (num == 5) {
-			wavefront(graph, startNode, goalNode);
-		}
-
-		if (num == 6) {
-			if (!A_star(graph, startNode, goalNode))
-			{
-				cout << "Cannot find path \n";
-				return 0;
-			}
-			else
-				generateStack(graph, startNode, goalNode, bestPath);
-		}
-
+		
 		myMaze.showPath(graph, startNode, goalNode, bestPath);
 	}
-
-	if (num > 6) {
-		Graph graph;
-		Graph::vertex_descriptor startNode, goalNode;
-		stack<Graph::vertex_descriptor> bestPath;
-
-		ifstream fin;
-
-		// Read the maze from the file.
-		string fileName = "graph/graph/graph1.txt";
-
-		fin.open(fileName.c_str());
+	
+	else //Picked a Graph Solver
+	{
+		// Read the graph from the file.
+		fin.open(graphFile.c_str());
 		if (!fin)
 		{
-			cerr << "Cannot open " << fileName << endl;
+			cerr << "Cannot open " << graphFile << endl;
 			exit(1);
 		}
 		initializeGraph(graph, startNode, goalNode, fin);
 
-		if (num == 7) {
-			if (dijkstra(graph, startNode))
-			{
-				generateStack(graph, startNode, goalNode, bestPath);
-
-				StackDebug(bestPath);
-			}
+		switch(num)
+		{
+			case 7: //Dijkstra
+				if (dijkstra(graph, startNode))
+				{
+					generateStack(graph, startNode, goalNode, bestPath);
+					
+					StackDebug(bestPath);
+				}
+				else
+					cout << "No Shortest Path Exists \n";
+				
+			case 8: //Bellman-Ford
+				if (bellmanFord(graph, startNode))
+				{
+					generateStack(graph, startNode, goalNode, bestPath);
+					
+					PrintStack(bestPath);
+				}
+				else
+					cout << "No Shortest Path Exists \n";
 		}
-
-		if (num == 8) {
-			if (bellmanFord(graph, startNode))
-			{
-				generateStack(graph, startNode, goalNode, bestPath);
-
-				StackDebug(bestPath);
-			}
-		}
+		
 	}
 }
 

@@ -120,3 +120,19 @@ void generateStack(Graph &a_graph,
 }
 
 
+int isInt(string a_prompt, int a_min, int a_max)
+{
+	int input=NULL;
+	while((input<a_min) || (input>a_max))
+	{
+		cout << a_prompt;
+		cin >> input;
+		if (cin.fail())
+		{
+			cin.clear();
+			cin.ignore();
+		}
+		else break;
+	}
+	return input;
+}

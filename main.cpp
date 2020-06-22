@@ -401,7 +401,7 @@ int main()
 				{
 					generateStack(graph, startNode, goalNode, bestPath);
 					
-					StackDebug(bestPath);
+					PrintStack(bestPath);
 				}
 				else
 					cout << "No Shortest Path Exists \n";

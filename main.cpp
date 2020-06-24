@@ -31,8 +31,7 @@ using namespace std;
 
 
 
-void initializeGraph(
-					 Graph &a_graph,
+void initializeGraph(Graph &a_graph,
 					 Graph::vertex_descriptor &a_start,
 					 Graph::vertex_descriptor &a_goal,
 					 ifstream &a_fin)
@@ -64,9 +63,6 @@ void initializeGraph(
 	}
 	
 }
-
-
-
 
 
 
@@ -111,7 +107,7 @@ bool dijkstra(Graph &a_graph, Graph::vertex_descriptor a_start)
 					a_graph[*vAdjItr].marked=true;
 				}
 				else //if already in queue then update value based on result of relax
-					queue.minHeapDecreaseKey(*vAdjItr, a_graph);
+					queue.minHeapDecreaseKey(queue.getIndex(*vAdjItr), a_graph);
 			}
 		}
 	}
@@ -124,6 +120,7 @@ bool dijkstra(Graph &a_graph, Graph::vertex_descriptor a_start)
 	
 	return true;
 } // end of dijikstra
+
 
 
 
@@ -297,7 +294,7 @@ bool A_star(Graph &a_graph, Graph::vertex_descriptor a_start, Graph::vertex_desc
 					a_graph[*vAdjItr].marked=true;
 				}
 				else //otherwise update its value
-					queue.minHeapDecreaseKey(*vAdjItr, a_graph);
+					queue.minHeapDecreaseKey(queue.getIndex(*vAdjItr), a_graph);
 				
 				if(*vAdjItr==a_goal) //if that adjacent node is the goal, search is complete
 					return true;
@@ -313,8 +310,8 @@ bool A_star(Graph &a_graph, Graph::vertex_descriptor a_start, Graph::vertex_desc
 
 int main()
 {
-	string mazeFile = "maze-files/maze1.txt";
-	string graphFile = "graph/graph1.txt";
+	string mazeFile = "maze-files/maze5.txt";
+	string graphFile = "graph/graph4.txt";
 	
 	int num = 0;
 	string prompt = "\nMaze File Algorthims: \n"
@@ -356,19 +353,42 @@ int main()
 		switch(num)
 		{
 			case 1: //Depth First with Recursion
-				myMaze.solve.findPathDFSRecursive(graph, startNode, goalNode, bestPath);
+				if (!myMaze.solve.findPathDFSRecursive(graph, startNode, goalNode, bestPath))
+				{
+					cout << "Cannot find path \n";
+					return 0;
+				}
 				break;
 			case 2: //Depth First with Stack
-				myMaze.solve.findPathDFSStack(graph, startNode, goalNode, bestPath);
+				if (!myMaze.solve.findPathDFSStack(graph, startNode, goalNode, bestPath))
+				{
+					cout << "Cannot find path \n";
+					return 0;
+				}
 				break;
 			case 3: //Iterative Depth First
-				myMaze.solve.findShortestPathDFS(graph, startNode, goalNode, bestPath);
+				if (!myMaze.solve.findShortestPathDFS(graph, startNode, goalNode, bestPath))
+				{
+					cout << "Cannot find path \n";
+					return 0;
+				}
 				break;
 			case 4: //Breadth First
-				myMaze.solve.findShortestPathBFS(graph, startNode, goalNode, bestPath);
+				if (!myMaze.solve.findShortestPathBFS(graph, startNode, goalNode, bestPath))
+				{
+					cout << "Cannot find path \n";
+					return 0;
+				}
 				break;
 			case 5: //Wavefront
-				wavefront(graph, startNode, goalNode);
+				if (!wavefront(graph, startNode, goalNode))
+				{
+					cout << "Cannot find path \n";
+					return 0;
+				}
+				else
+					generateStack(graph, startNode, goalNode, bestPath);
+				
 				break;
 			case 6: //A*
 				if (!A_star(graph, startNode, goalNode))
@@ -406,6 +426,8 @@ int main()
 				else
 					cout << "No Shortest Path Exists \n";
 				
+				break;
+				
 			case 8: //Bellman-Ford
 				if (bellmanFord(graph, startNode))
 				{
@@ -415,9 +437,10 @@ int main()
 				}
 				else
 					cout << "No Shortest Path Exists \n";
+				
+				break;
 		}
 		
 	}
 }
-
 

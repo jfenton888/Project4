@@ -36,7 +36,7 @@ void relax(Graph &a_graph,
 		   Graph::vertex_descriptor a_source,
 		   Graph::vertex_descriptor a_target);
 
-void initializeSingleSource(Graph &a_graph, Graph::vertex_descriptor a_start);
+void initializeSingleSource(Graph &a_graph, Graph::vertex_descriptor &a_start);
 
 int isInt(string a_prompt, int a_min, int a_max);
 
@@ -111,6 +111,71 @@ void PrintStack(stack<T> a_stack)
 		cout << endl;
 	}
 }
+
+
+
+
+
+
+
+
+
+/*
+bool dijkstra(Graph &a_graph, Graph::vertex_descriptor a_start)
+{
+	heapV<Graph::vertex_descriptor, Graph> queue;
+	pair<Graph::vertex_iterator, Graph::vertex_iterator> vItrRange = vertices(a_graph);
+	Graph::vertex_descriptor currV;
+	
+	initializeSingleSource(a_graph, a_start);
+	
+	for (Graph::vertex_iterator vItr = vItrRange.first; vItr != vItrRange.second; ++vItr)
+		queue.minHeapInsert(*vItr, a_graph);
+	
+	clearVisited(a_graph);
+	while (queue.size()>0)
+	{
+		currV=queue.extractMinHeapMinimum(a_graph);
+		
+		//cout<<"Exploring Node "<<currV<<endl;
+		//cout<<queue;
+		
+		a_graph[currV].visited=true;
+		
+		pair<Graph::adjacency_iterator, Graph::adjacency_iterator> vAdjItrRange = adjacent_vertices(currV, a_graph);
+		for (Graph::adjacency_iterator vAdjItr= vAdjItrRange.first; vAdjItr != vAdjItrRange.second; ++vAdjItr)
+		{
+			if(!a_graph[*vAdjItr].visited)
+			{
+				relax(a_graph, currV, *vAdjItr);
+				queue.minHeapDecreaseKey(*vAdjItr, a_graph);
+			}
+		}
+	}
+	
+	
+	return true;
+} // end of dijikstra
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #endif //PROJECT4_GLOBAL_H

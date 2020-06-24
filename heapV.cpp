@@ -23,7 +23,7 @@ heapV<T,U>::heapV()
 }
 
 template <typename T, typename U>
-int heapV<T,U>::getIndex(T &a_key)
+int heapV<T,U>::getIndex(T a_key)
 // Return the index of the item key in the heap.  Assumes each item is unique.
 {
 	for (int i = 0; i < size(); i++)
@@ -192,12 +192,13 @@ void heapV<T,U>::minHeapDecreaseKey(int a_index, U &a_graph)
 // an insertion sort that finds the new item's correct location in the list.
 {
 	// cout << i << " " << list[i] << " " << list[parent(i)] << endl;
-	
+
 	while (a_index > 0 && a_graph[m_list[parent(a_index)]].weight > a_graph[m_list[a_index]].weight)
 	{
 		swap(m_list[a_index], m_list[parent(a_index)]);
 		a_index = parent(a_index);
 	}
+
 }
 
 template <typename T, typename U>
@@ -239,6 +240,20 @@ void heapV<T,U>::heapsort(int a_heapSize, U &a_graph)
 		maxHeapify(0,a_heapSize,a_graph);
 	}
 }
+
+template <typename T, typename U>
+void heapV<T,U>::printHeap(U &a_graph)
+{
+	for(int iter=0;iter<size();iter++)
+	{
+		cout << "Vertex: " << m_list[iter] << endl;
+		cout << "Predecesor: " << a_graph[m_list[iter]].pred << endl;
+		cout << "Weight: " << a_graph[m_list[iter]].weight << endl;
+		cout << "Visited: " << a_graph[m_list[iter]].visited << endl;
+		cout << "Marked: " << a_graph[m_list[iter]].marked << endl <<endl;
+	}
+}
+
 
 template <typename T, typename U>
 ostream &operator<<(ostream &ostr, heapV<T,U> &a_heap)

@@ -106,12 +106,12 @@ void maze::mapMazeToGraph(Graph &a_graph)
 {
 	EdgeProperties edge;
 	edge.weight=1;
-    for (int y = 0; y < m_rows; y++)
+    for (int y = 0; y < m_rows; y++) //iterates over all positions to check if open space
     {
         for (int x = 0; x < m_cols; x++)
         {
-            
-            if (isLegal(y, x))
+            //creates vertices at all open spaces in maze
+            if (isLegal(y, x)) //will be true if not a wall
             {
                 Graph::vertex_descriptor v = add_vertex(a_graph);
                 a_graph[v].cell = pair<int, int>(y, x);
@@ -120,19 +120,16 @@ void maze::mapMazeToGraph(Graph &a_graph)
                 a_graph[v].pred = 1;
                 if (y != 0 && m_maze[y - 1][x].value)
                 {
-//                    cout<<"("<<x<<", "<<y<<") Up \n";
                     add_edge(m_maze[y - 1][x].vertex, v, edge, a_graph);
                     add_edge(v, m_maze[y - 1][x].vertex, edge, a_graph);
                     
                 }
                 if (x != 0 && m_maze[y][x - 1].value)
                 {
-//                    cout<<"("<<x<<", "<<y<<") Left \n";
                     add_edge(m_maze[y][x - 1].vertex, v, edge, a_graph);
                     add_edge(v, m_maze[y][x - 1].vertex, edge, a_graph);
                 }
-
-
+                
             }
         }
     }
@@ -162,48 +159,10 @@ void maze::printPath(Graph a_graph,
 }
 
 
-void maze::printGraphProperties(Graph &a_graph) const
-{
-    //int numEdge = 0;
-    
-    pair<Graph::vertex_iterator, Graph::vertex_iterator> vItrRange = vertices(a_graph);
-    
-    for (Graph::vertex_iterator vItr = vItrRange.first; vItr != vItrRange.second; ++vItr)
-    {
-        cout << "Vertex: " << *vItr << endl;
-        cout << "Cell: (" << a_graph[*vItr].cell.second << ", " <<
-             a_graph[*vItr].cell.first << ")" << endl;
-        cout << "Predecesor: " << a_graph[*vItr].pred << endl;
-        cout << "Weight: " << a_graph[*vItr].weight << endl;
-        cout << "Visited: " << a_graph[*vItr].visited << endl;
-        cout << "Marked: " << a_graph[*vItr].marked << endl;
-    
-        pair<Graph::adjacency_iterator, Graph::adjacency_iterator> vAdjItrRange = adjacent_vertices(*vItr, a_graph);
-        for (Graph::adjacency_iterator vAdjItr= vAdjItrRange.first; vAdjItr != vAdjItrRange.second; ++vAdjItr)
-            cout << "Adjacent to: "<<*vAdjItr<< " at (" << a_graph[*vAdjItr].cell.second << ", " <<
-                                             a_graph[*vAdjItr].cell.first << ")" << endl;
-        cout << endl;
-    }
-    
-    pair<Graph::edge_iterator, Graph::edge_iterator> eItrRange = edges(a_graph);
-    
-    for (Graph::edge_iterator eItr = eItrRange.first; eItr != eItrRange.second; ++eItr)
-    {
-        //numEdge++;
-        cout << "Edge: " << *eItr << endl;
-        cout << "Origin Vertex: " << source(*eItr, a_graph) << endl;
-        cout << "Target Vertex: " << target(*eItr, a_graph) << endl;
-        cout << "Weight: " << a_graph[*eItr].weight << endl;
-        cout << "Visited: " << a_graph[*eItr].visited << endl;
-        cout << "Marked: " << a_graph[*eItr].marked << endl << endl;
-    }
-    
-    
-    
-}
 
 
-// print out a maze, with the goal and current cells marked on the board.
+// print out a maze, with the goal and current cells marked on the board
+// shows the path taken with arrows pointing along the path
 void maze::showPath(Graph a_graph,
                     Graph::vertex_descriptor a_start,
                     Graph::vertex_descriptor a_goal,
@@ -213,6 +172,7 @@ void maze::showPath(Graph a_graph,
     
     clearMarked(a_graph);
     
+    //labels every node that is found in the best path
     while(!a_stack.empty())
     {
         currV = a_stack.top();
@@ -221,20 +181,21 @@ void maze::showPath(Graph a_graph,
     }
     
     cout << endl;
-    for (int y = 0; y < m_rows; y++)
+    for (int y = 0; y < m_rows; y++) //iterates across every cell in the maze
     {
         for (int x = 0; x < m_cols; x++)
         {
-        	
-            if(m_maze[y][x].value) //if (m_boolMaze[y][x])
+        	//if value is true then there is a vertex at that position, otherwise it is a wall
+            if(m_maze[y][x].value)
             {
                 currV = m_maze[y][x].vertex;
 	
+                //checks if vertex is start, end, or in the path, if not then it is open space
 				if(currV==a_start)
 					cout<<"+";
 				else if(currV==a_goal)
 					cout<<"*";
-                else if(a_graph[currV].marked)
+                else if(a_graph[currV].marked) //if marked then it was used in best path traversal, displays direction taken to get there
                 {
                     if(a_graph[a_graph[currV].pred].cell.first==y && a_graph[a_graph[currV].pred].cell.second==x-1)
                         cout<<">";
@@ -258,8 +219,45 @@ void maze::showPath(Graph a_graph,
 
 
 
+void maze::printGraphProperties(Graph &a_graph) const
+{
+    //int numEdge = 0;
+    
+    pair<Graph::vertex_iterator, Graph::vertex_iterator> vItrRange = vertices(a_graph);
+    
+    //print all properties from each vertex and the number and position of all adjacent vertices
+    for (Graph::vertex_iterator vItr = vItrRange.first; vItr != vItrRange.second; ++vItr)
+    {
+        cout << "Vertex: " << *vItr << endl;
+        cout << "Cell: (" << a_graph[*vItr].cell.second << ", " <<
+             a_graph[*vItr].cell.first << ")" << endl;
+        cout << "Predecesor: " << a_graph[*vItr].pred << endl;
+        cout << "Weight: " << a_graph[*vItr].weight << endl;
+        cout << "Visited: " << a_graph[*vItr].visited << endl;
+        cout << "Marked: " << a_graph[*vItr].marked << endl;
+        
+        pair<Graph::adjacency_iterator, Graph::adjacency_iterator> vAdjItrRange = adjacent_vertices(*vItr, a_graph);
+        for (Graph::adjacency_iterator vAdjItr= vAdjItrRange.first; vAdjItr != vAdjItrRange.second; ++vAdjItr)
+            cout << "Adjacent to: "<<*vAdjItr<< " at (" << a_graph[*vAdjItr].cell.second << ", " <<
+                 a_graph[*vAdjItr].cell.first << ")" << endl;
+        cout << endl;
+    }
+    
+    pair<Graph::edge_iterator, Graph::edge_iterator> eItrRange = edges(a_graph);
+    
+    for (Graph::edge_iterator eItr = eItrRange.first; eItr != eItrRange.second; ++eItr)
+    {
+        //numEdge++;
+        cout << "Edge: " << *eItr << endl;
+        cout << "Origin Vertex: " << source(*eItr, a_graph) << endl;
+        cout << "Target Vertex: " << target(*eItr, a_graph) << endl;
+        cout << "Weight: " << a_graph[*eItr].weight << endl;
+        cout << "Visited: " << a_graph[*eItr].visited << endl;
+        cout << "Marked: " << a_graph[*eItr].marked << endl << endl;
+    }
+}
 
-/*
+
 // output operator for the Graph class, prints out all nodes&properties and edges&properties
 ostream &operator<<(ostream &cout, const Graph &a_graph)
 {
@@ -291,5 +289,5 @@ ostream &operator<<(ostream &cout, const Graph &a_graph)
     }
     return cout;
 }
-*/
+
 

@@ -52,7 +52,7 @@ public:
 	int right(int i) {return 2*(i+1);}     // Given a node in a heap, return the right child
 	
 	T &getItem(int a_index) {return m_list[a_index];}      // Return a reference to the ith item in the heap
-	int getIndex(T &a_key);
+	int getIndex(T a_key);
 	int size() {return (int) m_list.size();}
 	
 	T getMaxHeapMaximum();
@@ -66,6 +66,8 @@ public:
 	
 	void maxHeapInsert(T a_key, U &a_graph);
 	void minHeapInsert(T a_key, U &a_graph);
+	
+	void printHeap(U &a_graph);
 	
 };
 

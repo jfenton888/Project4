@@ -40,12 +40,6 @@ public:
 						  Graph::vertex_descriptor a_goal,
 						  stack<Graph::vertex_descriptor> &a_path);
 	
-	bool traverseDFSShortest(Graph &a_graph,
-							 Graph::vertex_descriptor a_vertex,
-							 Graph::vertex_descriptor a_goal,
-							 stack<Graph::vertex_descriptor> &a_tempStack,
-							 stack<Graph::vertex_descriptor> &a_path);
-	
 	bool findShortestPathDFS(Graph &a_graph,
 							 Graph::vertex_descriptor a_start,
 							 Graph::vertex_descriptor a_goal,

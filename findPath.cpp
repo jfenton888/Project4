@@ -129,42 +129,6 @@ bool findPath::findPathDFSStack(Graph &a_graph,
 }
 
 
-// traverse function for shortest DFS
-bool findPath::traverseDFSShortest(Graph &a_graph,
-						 Graph::vertex_descriptor a_vertex,
-						 Graph::vertex_descriptor a_goal,
-						 stack<Graph::vertex_descriptor> &a_tempStack,
-						 stack<Graph::vertex_descriptor> &a_path)
-{
-	a_tempStack.push(a_vertex);
-	
-	// check if we are at the end
-	if (a_vertex == a_goal)
-	{
-		if (a_path.empty() || a_tempStack.size() < a_path.size())
-			a_path = a_tempStack;
-		
-		return true;
-	}
-	else
-	{
-		a_graph[a_vertex].visited = true;
-		bool found = false;
-		
-		pair<Graph::adjacency_iterator, Graph::adjacency_iterator> vItrRange = adjacent_vertices(a_vertex, a_graph);
-		
-		for (Graph::adjacency_iterator vItr = vItrRange.first; vItr != vItrRange.second; ++vItr)
-		{
-			if (!a_graph[*vItr].visited)
-			{
-				found = traverseDFSShortest(a_graph, *vItr, a_goal, a_tempStack, a_path);
-
-				a_tempStack.pop();
-			}
-		}
-		return found;
-	}
-}
 
 // find shortest path for DFS
 bool findPath::findShortestPathDFS(Graph &a_graph,
@@ -172,11 +136,6 @@ bool findPath::findShortestPathDFS(Graph &a_graph,
 						 Graph::vertex_descriptor a_goal,
 						 stack<Graph::vertex_descriptor> &a_path)
 {
-//	clearVisited(a_graph);
-//	stack<Graph::vertex_descriptor> tempStack;
-//
-//	return traverseDFSShortest(a_graph, a_start, a_goal, tempStack, a_path);
-
 	clearVisited(a_graph);
 	
 	for(int depth=1; depth<num_vertices(a_graph);depth++)
